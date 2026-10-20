@@ -426,8 +426,9 @@ export const varOrTerm: SparqlGrammarRule<'varOrTerm', Term> = <const> {
     { ALT: () => SUBRULE(S11.booleanLiteral) },
     { ALT: () => SUBRULE(S11.blankNode) },
     { ALT: () => {
+      // RDF-: `()` is the empty sequence, not rdf:nil
       const token = CONSUME(l11.terminals.nil);
-      return ACTION(() => C.astFactory.termNamed(C.astFactory.sourceLocation(token), CommonIRIs.NIL));
+      return ACTION(() => C.astFactory.termSequence([], C.astFactory.sourceLocation(token)));
     } },
     { ALT: () => SUBRULE(tripleTerm) },
   ]),

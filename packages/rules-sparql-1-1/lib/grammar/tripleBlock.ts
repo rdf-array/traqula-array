@@ -14,7 +14,6 @@ import type {
   TripleCollectionList,
   TripleNesting,
 } from '../Sparql11types.js';
-import { CommonIRIs } from '../utils.js';
 import { var_, varOrTerm, verb } from './general.js';
 import { path, pathGenerator } from './propertyPaths.js';
 
@@ -281,8 +280,8 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
   return {
     name,
     impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME }) => (C) => {
-      // Construct a [cons list](https://en.wikipedia.org/wiki/Cons#Lists),
-      // here called a [RDF collection](https://www.w3.org/TR/sparql11-query/#collections).
+      // RDF-: an [RDF collection](https://www.w3.org/TR/sparql11-query/#collections) is one sequence
+      // term holding its elements, not a cons list of rdf:first/rdf:rest triples.
       const terms: GraphNode[] = [];
 
       const startToken = CONSUME(l.symbols.LParen);
@@ -292,49 +291,15 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
       });
       const endToken = CONSUME(l.symbols.RParen);
 
-      return ACTION(() => {
-        const F = C.astFactory;
-        const triples: TripleNesting[] = [];
-        // The triples created in your recursion
-        const predFirst = F.termNamed(F.sourceLocation(), CommonIRIs.FIRST, undefined);
-        const predRest = F.termNamed(F.sourceLocation(), CommonIRIs.REST, undefined);
-        const predNil = F.termNamed(F.sourceLocation(), CommonIRIs.NIL, undefined);
-
-        const listHead = F.termBlank(undefined, F.sourceLocation());
-        let iterHead: TripleNesting['object'] = listHead;
-        for (const [ index, term ] of terms.entries()) {
-          const lastInList = index === terms.length - 1;
-
-          const headTriple: TripleNesting = F.triple(
-            iterHead,
-            predFirst,
-            term,
-          );
-          triples.push(headTriple);
-
-          // If not the last, create new iterHead, otherwise, close list
-          if (lastInList) {
-            const nilTriple: TripleNesting = F.triple(iterHead, predRest, predNil);
-            triples.push(nilTriple);
-          } else {
-            const tail = F.termBlank(undefined, F.sourceLocation());
-            const linkTriple: TripleNesting = F.triple(iterHead, predRest, tail);
-            triples.push(linkTriple);
-            iterHead = tail;
-          }
-        }
-        return F.tripleCollectionList(listHead, triples, F.sourceLocation(startToken, endToken));
-      });
+      return ACTION(() =>
+        C.astFactory.tripleCollectionList(terms, C.astFactory.sourceLocation(startToken, endToken)));
     },
     gImpl: ({ SUBRULE, PRINT_WORD }) => (ast, { astFactory: F }) => {
       F.printFilter(ast, () => PRINT_WORD('('));
-      // Only every 2 triple is relevant. The odd triples are linking triples.
-      for (const [ idx, triple ] of ast.triples.entries()) {
-        if (idx % 2 === 0) {
-          // Separate the items, otherwise `( ?a ex:b )` would be generated as `( ?aex:b )`
-          F.printFilter(ast, () => PRINT_WORD(''));
-          SUBRULE(graphNodePath, triple.object);
-        }
+      for (const element of ast.elements) {
+        // Separate the items, otherwise `( ?a ex:b )` would be generated as `( ?aex:b )`
+        F.printFilter(ast, () => PRINT_WORD(''));
+        SUBRULE(graphNodePath, element);
       }
       F.printFilter(ast, () => PRINT_WORD(')'));
     },

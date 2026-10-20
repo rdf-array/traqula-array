@@ -311,11 +311,29 @@ describe('astFactory', () => {
 
     it('creates and identifies list collections', ({ expect }) => {
       F.resetBlankNodeCounter();
+      // RDF-: a list collection is a sequence term of its elements; an element that is a blank node
+      // property list contributes its triples and is represented by its identifier
+      const iri = F.termNamed(genLoc, 'http://a');
       const blank = F.termBlank(undefined, genLoc);
-      const list = F.tripleCollectionList(blank, [], genLoc);
+      const triple = F.triple(blank, F.termNamed(genLoc, 'http://p'), F.termLiteral(genLoc, 'o'));
+      const properties = F.tripleCollectionBlankNodeProperties(blank, [ triple ], genLoc);
+      const list = F.tripleCollectionList([ iri, properties ], genLoc);
       expect(F.isTripleCollection(list)).toBe(true);
       expect(F.isTripleCollectionList(list)).toBe(true);
       expect(F.isTripleCollectionBlankNodeProperties(list)).toBe(false);
+      expect(F.isTermSequence(list.identifier)).toBe(true);
+      expect(list.identifier.elements).toEqual([ iri, blank ]);
+      expect(list.elements).toEqual([ iri, properties ]);
+      expect(list.triples).toEqual([ triple ]);
+    });
+
+    it('creates and identifies sequence terms', ({ expect }) => {
+      const sequence = F.termSequence([ F.termNamed(genLoc, 'http://a'), F.termVariable('v', genLoc) ], genLoc);
+      expect(F.isTerm(sequence)).toBe(true);
+      expect(F.isTermSequence(sequence)).toBe(true);
+      expect(F.isTermBlank(sequence)).toBe(false);
+      expect(sequence.elements).toHaveLength(2);
+      expect(F.isTermSequence(F.termSequence([], genLoc))).toBe(true);
     });
   });
 

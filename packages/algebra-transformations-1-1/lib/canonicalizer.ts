@@ -72,6 +72,13 @@ export class Canonicalizer {
       );
     }
 
+    if (term.termType === 'Sequence') {
+      // RDF-: blank nodes and variables inside a sequence are renamed like those inside a quoted triple
+      return new DataFactory().sequence(
+        term.elements.map(element => this.replaceValue(element, nameMapping, replaceVars, factory)),
+      );
+    }
+
     if (term.termType !== 'BlankNode' && (term.termType !== 'Variable' || !replaceVars)) {
       return term;
     }

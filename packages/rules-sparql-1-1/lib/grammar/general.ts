@@ -9,7 +9,6 @@ import type {
   TermIri,
   TermVariable,
 } from '../Sparql11types.js';
-import { CommonIRIs } from '../utils.js';
 import { blankNode, booleanLiteral, iri, iriFull, numericLiteral, rdfLiteral, verbA } from './literals.js';
 
 /**
@@ -149,16 +148,25 @@ export const graphTerm: SparqlRule<'graphTerm', GraphTerm> = <const> {
     { ALT: () => SUBRULE(booleanLiteral) },
     { GATE: () => C.parseMode.has('canCreateBlankNodes'), ALT: () => SUBRULE(blankNode) },
     { ALT: () => {
+      // RDF-: `()` is the empty sequence, not rdf:nil
       const tokenNil = CONSUME(l.terminals.nil);
       return ACTION(() =>
-        C.astFactory.termNamed(C.astFactory.sourceLocation(tokenNil), CommonIRIs.NIL));
+        C.astFactory.termSequence([], C.astFactory.sourceLocation(tokenNil)));
     } },
   ]),
-  gImpl: ({ SUBRULE }) => (ast, { astFactory: F }) => {
+  gImpl: ({ SUBRULE, PRINT_WORD }) => (ast, { astFactory: F }) => {
     if (F.isTermNamed(ast)) {
       SUBRULE(iri, ast);
     } else if (F.isTermLiteral(ast)) {
       SUBRULE(rdfLiteral, ast);
+    } else if (F.isTermSequence(ast)) {
+      // RDF-: a sequence term, `( e1 e2 ... )`
+      F.printFilter(ast, () => PRINT_WORD('('));
+      for (const element of ast.elements) {
+        F.printFilter(ast, () => PRINT_WORD(''));
+        SUBRULE(varOrTerm, element);
+      }
+      F.printFilter(ast, () => PRINT_WORD(')'));
     } else {
       SUBRULE(blankNode, ast);
     }

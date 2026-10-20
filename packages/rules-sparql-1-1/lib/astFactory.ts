@@ -120,15 +120,25 @@ export class AstFactory extends asArg(AstCoreFactory)
     return this.isOfSubType(obj, 'tripleCollection', 'blankNodeProperties');
   }
 
-  public tripleCollectionList(
-    identifier: TermBlank,
-    triples: TripleNesting[],
-    loc: SourceLocation,
-  ): TripleCollectionList {
+  /**
+   * RDF-: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
+   * list (or a nested list) contributes its triples, and the sequence holds its identifier.
+   */
+  public tripleCollectionList(elements: GraphNode[], loc: SourceLocation): TripleCollectionList {
+    const triples: TripleNesting[] = [];
+    const identifiers: Term[] = elements.map((element) => {
+      if (this.isTripleCollection(element)) {
+        const collection = element;
+        triples.push(...collection.triples);
+        return collection.identifier;
+      }
+      return <Term> element;
+    });
     return {
       type: 'tripleCollection',
       subType: 'list',
-      identifier,
+      identifier: this.termSequence(identifiers, this.sourceLocation()),
+      elements,
       triples,
       loc,
     };

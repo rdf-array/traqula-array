@@ -8,6 +8,7 @@ import type {
   TermBlank,
   TermIri,
   TermLiteral,
+  TermSequence,
   TermVariable,
   TripleNesting,
 } from '@traqula/rules-sparql-1-1';
@@ -19,7 +20,8 @@ import { translateAlgPatternIntoGroup, translateAlgPatternNew } from './pattern.
 export type RdfTermToAst<T extends RDF.Term> = T extends RDF.Variable ? TermVariable :
   T extends RDF.BlankNode ? TermBlank :
     T extends RDF.Literal ? TermLiteral :
-      T extends RDF.NamedNode ? TermIri : never;
+      T extends RDF.NamedNode ? TermIri :
+        T extends RDF.Sequence ? TermSequence : never;
 
 export const translateAlgTerm: AstIndir<'translateTerm', Term, [RDF.Term]> = {
   name: 'translateTerm',
@@ -39,6 +41,10 @@ export const translateAlgTerm: AstIndir<'translateTerm', Term, [RDF.Term]> = {
         term.value,
         term.language ? term.language : <RdfTermToAst<typeof term.datatype>>SUBRULE(translateAlgTerm, term.datatype),
       );
+    }
+    if (term.termType === 'Sequence') {
+      // RDF-: a sequence term prints as `( e1 e2 ... )`
+      return F.termSequence(term.elements.map(element => SUBRULE(translateAlgTerm, element)), F.gen());
     }
     throw new Error(`invalid term type: ${term.termType}`);
   },

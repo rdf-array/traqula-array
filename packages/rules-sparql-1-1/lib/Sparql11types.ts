@@ -166,11 +166,14 @@ export type TripleCollectionBase = Node & {
   identifier: Term;
 };
 /**
- * The subject of the triples does not have a string manifestation.
+ * RDF-: a collection `( e1 e2 ... )` is one sequence term: the identifier is the sequence of the
+ * elements' identifiers, and the triples are those contributed by the blank node property lists
+ * (and nested lists) among the elements.
  */
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
-  identifier: TermBlank;
+  identifier: TermSequence;
+  elements: GraphNode[];
 };
 /**
  * Bot subject and predicate of the triples do not have a string manifestation.
@@ -429,5 +432,10 @@ export type TermIri = TermIriFull | TermIriPrefixed;
 
 export type TermBlank = TermBase & { subType: 'blankNode' } & { label: string };
 
-export type GraphTerm = TermIri | TermBlank | TermLiteral;
+/**
+ * RDF-: a sequence term, `( e1 e2 ... )`, holding its elements in order; `()` is the empty sequence.
+ */
+export type TermSequence = TermBase & { subType: 'sequence'; elements: Term[] };
+
+export type GraphTerm = TermIri | TermBlank | TermLiteral | TermSequence;
 export type Term = GraphTerm | TermVariable;

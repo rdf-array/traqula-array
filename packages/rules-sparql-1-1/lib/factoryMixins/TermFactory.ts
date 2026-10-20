@@ -1,5 +1,6 @@
 import type { AstCoreFactory, SourceLocation, Typed, SubTyped } from '@traqula/core';
 import type {
+  Term,
   TermBlank,
   TermIri,
   TermIriFull,
@@ -8,6 +9,7 @@ import type {
   TermLiteralLangStr,
   TermLiteralStr,
   TermLiteralTyped,
+  TermSequence,
   TermVariable,
 } from '../Sparql11types.js';
 import type { Constructor } from './mixins.js';
@@ -42,6 +44,22 @@ export function TermFactoryMixin<TBase extends Constructor<AstCoreFactory>>(Base
 
     public isTermBlank(obj: object): obj is SubTyped<NodeType, 'blankNode'> {
       return this.isOfSubType(obj, nodeType, 'blankNode');
+    }
+
+    /**
+     * RDF-: a sequence term holding the given elements, in order.
+     */
+    public termSequence(elements: Term[], loc: SourceLocation): TermSequence {
+      return {
+        type: 'term',
+        subType: 'sequence',
+        elements,
+        loc,
+      };
+    }
+
+    public isTermSequence(obj: object): obj is SubTyped<NodeType, 'sequence'> & { elements: Term[] } {
+      return this.isOfSubType(obj, nodeType, 'sequence');
     }
 
     /**

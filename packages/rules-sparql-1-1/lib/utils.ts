@@ -31,7 +31,7 @@ export function sparqlCodepointEscape(input: string): string {
 /**
  * Common IRI constants used across SPARQL parsing and generation.
  * Includes XSD datatypes (BOOLEAN, INTEGER, DECIMAL, DOUBLE, STRING)
- * and RDF vocabulary (FIRST, REST, NIL, TYPE).
+ * and RDF vocabulary (TYPE).
  */
 export enum CommonIRIs {
   // XSD
@@ -40,10 +40,7 @@ export enum CommonIRIs {
   DECIMAL = 'http://www.w3.org/2001/XMLSchema#decimal',
   DOUBLE = 'http://www.w3.org/2001/XMLSchema#double',
   STRING = 'http://www.w3.org/2001/XMLSchema#string',
-  // RDF
-  FIRST = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first',
-  REST = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
-  NIL = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil',
+  // RDF (RDF-: no rdf:first, rdf:rest or rdf:nil, a collection is a sequence term)
   TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
 }
 

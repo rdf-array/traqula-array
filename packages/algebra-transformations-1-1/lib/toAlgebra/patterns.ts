@@ -187,6 +187,10 @@ export const translateBgp: AlgebraIndir<'translateBgp', Algebra.Operation, [Patt
     if (joins.length === 1) {
       return joins[0];
     }
+    if (joins.length === 0) {
+      // RDF-: a lone collection `{ ( ?x ) }` is a term, not a triple, so the pattern is the empty BGP, as `{ }` is
+      return AF.createBgp([]);
+    }
     return AF.createJoin(joins);
   },
 };

@@ -26,6 +26,10 @@
     "test": "vitest test --run",
     "version": "manual-git-changelog onversion"
   },
+  "dependencies": {
+    "rdf-data-factory": "github:rdf-array/rdf-data-factory-array#rdf-sequences",
+    "rdf-string": "github:rdf-array/rdf-string-array#rdf-sequences"
+  },
   "devDependencies": {
     "@rdfjs/types": "^2.0.0",
     "@rubensworks/eslint-config": "^3.1.0",
@@ -53,7 +57,10 @@
     "**/picomatch": "4.0.7",
     "**/tar": "7.5.22",
     "@nx/devkit/minimatch": "10.2.6",
+    "@rdfjs/types": "github:rdf-array/types-array#rdf-sequences",
     "@typescript-eslint/typescript-estree/minimatch": "10.2.6",
-    "nx/minimatch": "10.2.6"
+    "nx/minimatch": "10.2.6",
+    "rdf-data-factory": "github:rdf-array/rdf-data-factory-array#rdf-sequences",
+    "rdf-string": "github:rdf-array/rdf-string-array#rdf-sequences"
   }
 }

@@ -14,6 +14,13 @@ export function objectify(algebra: any): any {
         graph: objectify(algebra.graph),
       };
     }
+    if (algebra.termType === 'Sequence') {
+      // RDF-: a sequence term is its elements
+      return {
+        termType: 'Sequence',
+        elements: algebra.elements.map((element: any) => objectify(element)),
+      };
+    }
     const result: any = { termType: algebra.termType, value: algebra.value };
     if (algebra.language) {
       result.language = algebra.language;

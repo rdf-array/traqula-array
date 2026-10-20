@@ -154,7 +154,8 @@ export type TripleCollectionBase = Node & {
  */
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
-  identifier: TermBlank;
+  identifier: T11.TermSequence;
+  elements: GraphNode[];
 };
 /**
  * The subject of the triples does not have a string manifestation.
@@ -378,4 +379,4 @@ export type TermTriple = T11.TermBase & {
 };
 
 export type Term = GraphTerm | TermVariable;
-export type GraphTerm = TermIri | TermBlank | TermLiteral | TermTriple;
+export type GraphTerm = TermIri | TermBlank | TermLiteral | TermTriple | T11.TermSequence;

@@ -452,6 +452,13 @@ export function objectify(algebra: any): any {
         graph: objectify(algebra.graph),
       };
     }
+    if (algebra.termType === 'Sequence') {
+      // RDF-: a sequence term is its elements
+      return {
+        termType: 'Sequence',
+        elements: algebra.elements.map((element: any) => objectify(element)),
+      };
+    }
     const result: any = { termType: algebra.termType, value: algebra.value };
     if (algebra.language) {
       result.language = algebra.language;
@@ -501,33 +508,24 @@ export function inScopeVariables(
     variables[v.value] = v;
   }
 
-  function recurseTerm(quad: RDF.BaseQuad): void {
-    // Subject
-    if (quad.subject.termType === 'Variable') {
-      addVariable(quad.subject);
-    } else if (quad.subject.termType === 'Quad') {
-      recurseTerm(quad.subject);
+  function visitTerm(term: RDF.Term): void {
+    if (term.termType === 'Variable') {
+      addVariable(term);
+    } else if (term.termType === 'Quad') {
+      recurseTerm(term);
+    } else if (term.termType === 'Sequence') {
+      // RDF-: variables inside a sequence term are in scope too
+      for (const element of term.elements) {
+        visitTerm(element);
+      }
     }
-    // Predicate
-    if (quad.predicate.termType === 'Variable') {
-      addVariable(quad.predicate);
-    } else if (quad.predicate.termType === 'Quad') {
-      recurseTerm(quad.predicate);
-    }
-    // Object
-    if (quad.object.termType === 'Variable') {
-      addVariable(quad.object);
-    } else if (quad.object.termType === 'Quad') {
-      recurseTerm(quad.object);
-    }
+  }
 
-    // Graph
-    if (quad.graph.termType === 'Variable') {
-      addVariable(quad.graph);
-    }
-    if (quad.graph.termType === 'Quad') {
-      recurseTerm(quad.graph);
-    }
+  function recurseTerm(quad: RDF.BaseQuad): void {
+    visitTerm(quad.subject);
+    visitTerm(quad.predicate);
+    visitTerm(quad.object);
+    visitTerm(quad.graph);
   }
 
   function visitingRecursion(curOp: A.BaseOperation): void {
@@ -571,24 +569,9 @@ export function inScopeVariables(
         },
       },
       [Types.PATH]: { visitor: (op) => {
-        // Subject
-        if (op.subject.termType === 'Variable') {
-          addVariable(op.subject);
-        } else if (op.subject.termType === 'Quad') {
-          recurseTerm(op.subject);
-        }
-        // Predicate
-        if (op.object.termType === 'Variable') {
-          addVariable(op.object);
-        } else if (op.object.termType === 'Quad') {
-          recurseTerm(op.object);
-        }
-        // Object
-        if (op.graph.termType === 'Variable') {
-          addVariable(op.graph);
-        } else if (op.graph.termType === 'Quad') {
-          recurseTerm(op.graph);
-        }
+        visitTerm(op.subject);
+        visitTerm(op.object);
+        visitTerm(op.graph);
       } },
       [Types.PATTERN]: { visitor: op => recurseTerm(op) },
       [Types.PROJECT]: {
