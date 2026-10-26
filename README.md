@@ -1,9 +1,9 @@
 <img src=".github/rdf-array-logo.png" alt="[traqula]" width="96" align="right">
 
-# traqula-array: Traqula for RDF-
+# traqula-array: Traqula for rdf-array
 
 **RDF-** fork of [Traqula](https://github.com/comunica/traqula), the SPARQL parser, generator and
-algebra behind [comunica-array](https://github.com/rdf-array/comunica-array). In RDF- a collection
+algebra behind [comunica-array](https://github.com/rdf-array/comunica-array). In rdf-array a collection
 `( e1 e2 ... )` is one **sequence** term (`termType: "Sequence"`, see
 [rdf-data-factory-array](https://github.com/rdf-array/rdf-data-factory-array)) and `()` is the empty
 sequence, not `rdf:nil`. The SPARQL 1.1 and 1.2 grammars parse a collection into a `TermSequence`
@@ -15,7 +15,7 @@ collection `{ ( ?x ) }` is a term with nothing to attach to, so it is the empty 
 the collection tests (`dawg-syntax/forms/0[12]`, `dawg-syntax/lists/*`, `sparql12/*-inside-*-02`, the
 `collection-*` and `lists` statics) were re-recorded. Dependencies resolve to the rdf-array forks
 (`resolutions` in package.json); comunica-array links this checkout side by side. Its
-doc/rdf-array.md describes RDF- and lists the sibling forks.
+doc/rdf-array.md describes rdf-array and lists the sibling forks.
 
 ---
 

@@ -311,7 +311,7 @@ describe('astFactory', () => {
 
     it('creates and identifies list collections', ({ expect }) => {
       F.resetBlankNodeCounter();
-      // RDF-: a list collection is a sequence term of its elements; an element that is a blank node
+      // rdf-array: a list collection is a sequence term of its elements; an element that is a blank node
       // property list contributes its triples and is represented by its identifier
       const iri = F.termNamed(genLoc, 'http://a');
       const blank = F.termBlank(undefined, genLoc);

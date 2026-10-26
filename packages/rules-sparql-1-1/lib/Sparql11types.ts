@@ -166,7 +166,7 @@ export type TripleCollectionBase = Node & {
   identifier: Term;
 };
 /**
- * RDF-: a collection `( e1 e2 ... )` is one sequence term: the identifier is the sequence of the
+ * rdf-array: a collection `( e1 e2 ... )` is one sequence term: the identifier is the sequence of the
  * elements' identifiers, and the triples are those contributed by the blank node property lists
  * (and nested lists) among the elements.
  */
@@ -433,7 +433,7 @@ export type TermIri = TermIriFull | TermIriPrefixed;
 export type TermBlank = TermBase & { subType: 'blankNode' } & { label: string };
 
 /**
- * RDF-: a sequence term, `( e1 e2 ... )`, holding its elements in order; `()` is the empty sequence.
+ * rdf-array: a sequence term, `( e1 e2 ... )`, holding its elements in order; `()` is the empty sequence.
  */
 export type TermSequence = TermBase & { subType: 'sequence'; elements: Term[] };
 

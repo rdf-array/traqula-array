@@ -43,7 +43,7 @@ export const translateAlgTerm: AstIndir<'translateTerm', Term, [RDF.Term]> = {
       );
     }
     if (term.termType === 'Sequence') {
-      // RDF-: a sequence term prints as `( e1 e2 ... )`
+      // rdf-array: a sequence term prints as `( e1 e2 ... )`
       return F.termSequence(term.elements.map(element => SUBRULE(translateAlgTerm, element)), F.gen());
     }
     throw new Error(`invalid term type: ${term.termType}`);

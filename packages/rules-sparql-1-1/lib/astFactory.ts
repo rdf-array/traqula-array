@@ -121,7 +121,7 @@ export class AstFactory extends asArg(AstCoreFactory)
   }
 
   /**
-   * RDF-: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
+   * rdf-array: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
    * list (or a nested list) contributes its triples, and the sequence holds its identifier.
    */
   public tripleCollectionList(elements: GraphNode[], loc: SourceLocation): TripleCollectionList {

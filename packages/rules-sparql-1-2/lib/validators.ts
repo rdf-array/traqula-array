@@ -71,7 +71,7 @@ export function findPatternBoundedVars(
       findPatternBoundedVars(iter.object, boundedVars);
     }
     if (F.isTermSequence(iter)) {
-      // RDF-: variables inside a sequence term
+      // rdf-array: variables inside a sequence term
       for (const element of iter.elements) {
         findPatternBoundedVars(element, boundedVars);
       }
@@ -92,7 +92,7 @@ export function findPatternBoundedVars(
     }
   } else if (F.isTripleCollection(iter) || F.isPatternBgp(iter)) {
     if (F.isTripleCollectionList(iter)) {
-      // RDF-: the list is a sequence term, whose elements may be variables
+      // rdf-array: the list is a sequence term, whose elements may be variables
       findPatternBoundedVars(iter.identifier, boundedVars);
     }
     for (const triple of iter.triples) {

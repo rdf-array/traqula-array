@@ -67,7 +67,7 @@ export const translateTerm: AlgebraIndir<'translateTerm', RDF.Term, [Term]> = {
       return dataFactory.literal(term.value, langOrIri);
     }
     if (F.isTermSequence(term)) {
-      // RDF-: a sequence term; the data factory is the fork with sequence()
+      // rdf-array: a sequence term; the data factory is the fork with sequence()
       return dataFactory.sequence!(term.elements.map(element => SUBRULE(translateTerm, element)));
     }
     throw new Error(`Unexpected term: ${JSON.stringify(term)}`);
@@ -152,7 +152,7 @@ AlgebraIndir<'translateBlankNodesToVariables', Algebra.Operation, [Algebra.Opera
         );
       }
       if (term.termType === 'Sequence') {
-        // RDF-: blank nodes inside a sequence term become variables too
+        // rdf-array: blank nodes inside a sequence term become variables too
         return AF.dataFactory.sequence!(term.elements.map(element => blankToVariable(element)));
       }
       return term;

@@ -148,7 +148,7 @@ export const graphTerm: SparqlRule<'graphTerm', GraphTerm> = <const> {
     { ALT: () => SUBRULE(booleanLiteral) },
     { GATE: () => C.parseMode.has('canCreateBlankNodes'), ALT: () => SUBRULE(blankNode) },
     { ALT: () => {
-      // RDF-: `()` is the empty sequence, not rdf:nil
+      // rdf-array: `()` is the empty sequence, not rdf:nil
       const tokenNil = CONSUME(l.terminals.nil);
       return ACTION(() =>
         C.astFactory.termSequence([], C.astFactory.sourceLocation(tokenNil)));
@@ -160,7 +160,7 @@ export const graphTerm: SparqlRule<'graphTerm', GraphTerm> = <const> {
     } else if (F.isTermLiteral(ast)) {
       SUBRULE(rdfLiteral, ast);
     } else if (F.isTermSequence(ast)) {
-      // RDF-: a sequence term, `( e1 e2 ... )`
+      // rdf-array: a sequence term, `( e1 e2 ... )`
       F.printFilter(ast, () => PRINT_WORD('('));
       for (const element of ast.elements) {
         F.printFilter(ast, () => PRINT_WORD(''));

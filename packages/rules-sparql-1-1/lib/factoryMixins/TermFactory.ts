@@ -47,7 +47,7 @@ export function TermFactoryMixin<TBase extends Constructor<AstCoreFactory>>(Base
     }
 
     /**
-     * RDF-: a sequence term holding the given elements, in order.
+     * rdf-array: a sequence term holding the given elements, in order.
      */
     public termSequence(elements: Term[], loc: SourceLocation): TermSequence {
       return {

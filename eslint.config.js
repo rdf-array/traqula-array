@@ -25,6 +25,8 @@ export default config([
         { checkArguments: false },
       ],
       'test/consistent-test-it': 'off',
+      // rdf-array: comments marked `rdf-array:` start lowercase
+      'capitalized-comments': [ 'error', 'always', { ignoreConsecutiveComments: true, ignorePattern: 'rdf-array' }],
       'import/extensions': 'off',
 
       // Default

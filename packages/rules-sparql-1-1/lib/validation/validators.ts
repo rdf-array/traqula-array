@@ -182,7 +182,7 @@ export function findPatternBoundedVars(
   } else if (F.isPatternBind(op)) {
     recurse(op.variable);
   } else if (F.isTermSequence(op)) {
-    // RDF-: variables inside a sequence term
+    // rdf-array: variables inside a sequence term
     recurse(op.elements);
   } else if (F.isTermVariable(op)) {
     boundedVars.add(op.value);

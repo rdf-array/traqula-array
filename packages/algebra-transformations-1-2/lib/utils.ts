@@ -15,7 +15,7 @@ export function objectify(algebra: any): any {
       };
     }
     if (algebra.termType === 'Sequence') {
-      // RDF-: a sequence term is its elements
+      // rdf-array: a sequence term is its elements
       return {
         termType: 'Sequence',
         elements: algebra.elements.map((element: any) => objectify(element)),

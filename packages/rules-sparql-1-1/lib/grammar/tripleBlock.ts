@@ -280,7 +280,7 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
   return {
     name,
     impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME }) => (C) => {
-      // RDF-: an [RDF collection](https://www.w3.org/TR/sparql11-query/#collections) is one sequence
+      // rdf-array: an [RDF collection](https://www.w3.org/TR/sparql11-query/#collections) is one sequence
       // term holding its elements, not a cons list of rdf:first/rdf:rest triples.
       const terms: GraphNode[] = [];
 
@@ -316,7 +316,7 @@ function triplesNodeImpl<T extends string>(name: T, allowPaths: boolean): Sparql
   return <const>{
     name,
     impl: ({ SUBRULE, OR }) => C => OR<TripleCollection>([
-      // RDF-: a collection is one sequence term and mints no blank nodes, so it may appear where
+      // rdf-array: a collection is one sequence term and mints no blank nodes, so it may appear where
       // blank nodes may not (INSERT DATA, DELETE DATA); its elements are still gated
       { ALT: () => SUBRULE(allowPaths ? collectionPath : collection) },
       {
@@ -401,7 +401,7 @@ function graphNodeImpl<T extends string>(name: T, allowPaths: boolean): SparqlRu
     name,
     impl: ({ SUBRULE, OR }) => () => OR<Term | TripleCollection>([
       { ALT: () => SUBRULE(varOrTerm) },
-      // RDF-: triplesNode gates its blank node property lists itself
+      // rdf-array: triplesNode gates its blank node property lists itself
       { ALT: () => SUBRULE(triplesNodeRule) },
     ]),
     gImpl: ({ SUBRULE }) => (ast, { astFactory: F }) => {

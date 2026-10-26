@@ -40,7 +40,7 @@ export enum CommonIRIs {
   DECIMAL = 'http://www.w3.org/2001/XMLSchema#decimal',
   DOUBLE = 'http://www.w3.org/2001/XMLSchema#double',
   STRING = 'http://www.w3.org/2001/XMLSchema#string',
-  // RDF (RDF-: no rdf:first, rdf:rest or rdf:nil, a collection is a sequence term)
+  // RDF (rdf-array: no rdf:first, rdf:rest or rdf:nil, a collection is a sequence term)
   TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
 }
 

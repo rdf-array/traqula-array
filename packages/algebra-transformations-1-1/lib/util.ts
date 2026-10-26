@@ -453,7 +453,7 @@ export function objectify(algebra: any): any {
       };
     }
     if (algebra.termType === 'Sequence') {
-      // RDF-: a sequence term is its elements
+      // rdf-array: a sequence term is its elements
       return {
         termType: 'Sequence',
         elements: algebra.elements.map((element: any) => objectify(element)),
@@ -514,7 +514,7 @@ export function inScopeVariables(
     } else if (term.termType === 'Quad') {
       recurseTerm(term);
     } else if (term.termType === 'Sequence') {
-      // RDF-: variables inside a sequence term are in scope too
+      // rdf-array: variables inside a sequence term are in scope too
       for (const element of term.elements) {
         visitTerm(element);
       }
