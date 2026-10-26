@@ -101,6 +101,19 @@ describe('extra parser coverage', () => {
     });
   });
 
+  describe('rdf-array: sequences where blank nodes are not allowed', () => {
+    it('parses a sequence in DELETE DATA, which mints no blank node', ({ expect }) => {
+      const result = parser.parse('DELETE DATA { <http://s> <http://p> ( 1 ( 2 3 ) ) }');
+      expect(result.type).toBe('update');
+    });
+
+    it('still refuses a blank node property list in DELETE DATA, inside a sequence or not', ({ expect }) => {
+      expect(() => parser.parse('DELETE DATA { <http://s> <http://p> [ <http://q> 1 ] }')).toThrow();
+      expect(() => parser.parse('DELETE DATA { <http://s> <http://p> ( [ <http://q> 1 ] ) }')).toThrow();
+      expect(() => parser.parse('DELETE DATA { <http://s> <http://p> ( [] ) }')).toThrow();
+    });
+  });
+
   describe('subquery variable collision', () => {
     it('throws when AS target variable conflicts with a subquery variable', ({ expect }) => {
       expect(() => parser.parse(

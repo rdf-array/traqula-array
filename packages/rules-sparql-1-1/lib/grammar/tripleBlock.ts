@@ -315,9 +315,14 @@ export const collectionPath = collectionImpl('collectionPath', true);
 function triplesNodeImpl<T extends string>(name: T, allowPaths: boolean): SparqlRule<T, TripleCollection> {
   return <const>{
     name,
-    impl: ({ SUBRULE, OR }) => () => OR<TripleCollection>([
+    impl: ({ SUBRULE, OR }) => C => OR<TripleCollection>([
+      // RDF-: a collection is one sequence term and mints no blank nodes, so it may appear where
+      // blank nodes may not (INSERT DATA, DELETE DATA); its elements are still gated
       { ALT: () => SUBRULE(allowPaths ? collectionPath : collection) },
-      { ALT: () => SUBRULE(allowPaths ? blankNodePropertyListPath : blankNodePropertyList) },
+      {
+        GATE: () => C.parseMode.has('canCreateBlankNodes'),
+        ALT: () => SUBRULE(allowPaths ? blankNodePropertyListPath : blankNodePropertyList),
+      },
     ]),
     gImpl: ({ SUBRULE }) => ast => ast.subType === 'list' ?
       SUBRULE(collectionPath, ast) :
@@ -394,12 +399,10 @@ function graphNodeImpl<T extends string>(name: T, allowPaths: boolean): SparqlRu
   const triplesNodeRule = allowPaths ? triplesNodePath : triplesNode;
   return {
     name,
-    impl: ({ SUBRULE, OR }) => C => OR<Term | TripleCollection>([
+    impl: ({ SUBRULE, OR }) => () => OR<Term | TripleCollection>([
       { ALT: () => SUBRULE(varOrTerm) },
-      {
-        GATE: () => C.parseMode.has('canCreateBlankNodes'),
-        ALT: () => SUBRULE(triplesNodeRule),
-      },
+      // RDF-: triplesNode gates its blank node property lists itself
+      { ALT: () => SUBRULE(triplesNodeRule) },
     ]),
     gImpl: ({ SUBRULE }) => (ast, { astFactory: F }) => {
       if (F.isTerm(ast)) {
