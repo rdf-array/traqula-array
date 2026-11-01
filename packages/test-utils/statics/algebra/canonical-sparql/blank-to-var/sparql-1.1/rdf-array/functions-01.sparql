@@ -1,0 +1,11 @@
+SELECT ?s ?cell ?len ?tail ?head WHERE {
+  {
+    ?s <http://example.org/matrix> ?rows .
+    BIND( ?rows[ "2"^^<http://www.w3.org/2001/XMLSchema#integer>][ "3"^^<http://www.w3.org/2001/XMLSchema#integer>] AS ?cell )
+    BIND( SEQLEN( ?rows[ "2"^^<http://www.w3.org/2001/XMLSchema#integer>] ) AS ?len )
+    BIND( ?rows[ "2"^^<http://www.w3.org/2001/XMLSchema#integer>...] AS ?tail )
+    BIND( ?rows[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>... "2"^^<http://www.w3.org/2001/XMLSchema#integer>] AS ?head )
+  }
+  FILTER ( ( ( ( ISSEQ( ?rows ) && ( SEQ( "3"^^<http://www.w3.org/2001/XMLSchema#integer> , "4"^^<http://www.w3.org/2001/XMLSchema#integer> ) IN ?rows ) ) && ( ?s NOT IN ?rows[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>] ) ) && ( ?rows = SEQ( SEQ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> , "2"^^<http://www.w3.org/2001/XMLSchema#integer> , "3"^^<http://www.w3.org/2001/XMLSchema#integer> ) , SEQ( ) ) ) ) )
+}
+ORDER BY ASC ( ?rows[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>] )

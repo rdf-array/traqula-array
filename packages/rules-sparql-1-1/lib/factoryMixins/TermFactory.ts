@@ -1,6 +1,6 @@
 import type { AstCoreFactory, SourceLocation, Typed, SubTyped } from '@traqula/core';
 import type {
-  Term,
+  SequenceMember,
   TermBlank,
   TermIri,
   TermIriFull,
@@ -49,7 +49,7 @@ export function TermFactoryMixin<TBase extends Constructor<AstCoreFactory>>(Base
     /**
      * rdf-array: a sequence term holding the given elements, in order.
      */
-    public termSequence(elements: Term[], loc: SourceLocation): TermSequence {
+    public termSequence(elements: SequenceMember[], loc: SourceLocation): TermSequence {
       return {
         type: 'term',
         subType: 'sequence',
@@ -58,7 +58,7 @@ export function TermFactoryMixin<TBase extends Constructor<AstCoreFactory>>(Base
       };
     }
 
-    public isTermSequence(obj: object): obj is SubTyped<NodeType, 'sequence'> & { elements: Term[] } {
+    public isTermSequence(obj: object): obj is SubTyped<NodeType, 'sequence'> & { elements: SequenceMember[] } {
       return this.isOfSubType(obj, nodeType, 'sequence');
     }
 

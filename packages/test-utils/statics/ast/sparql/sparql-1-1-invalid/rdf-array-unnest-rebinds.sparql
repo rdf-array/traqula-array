@@ -1,0 +1,1 @@
+SELECT * { ?s <http://ex/p> ?o UNNEST(?o AS ?o) }

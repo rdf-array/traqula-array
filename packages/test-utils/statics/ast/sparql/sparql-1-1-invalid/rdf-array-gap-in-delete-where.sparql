@@ -1,0 +1,1 @@
+DELETE WHERE { ?s <http://ex/p> ( ?a ...?b ) }

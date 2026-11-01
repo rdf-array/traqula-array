@@ -12,6 +12,8 @@ const rulesNoBuiltIn = <const> [
   gram.additiveExpression,
   gram.multiplicativeExpression,
   gram.unaryExpression,
+  gram.postfixExpression,
+  gram.seqRef,
   gram.primaryExpression,
   gram.brackettedExpression,
   // BuiltInCall,
@@ -41,6 +43,10 @@ const rulesNoBuiltIn = <const> [
   gram.builtInUcase,
   gram.builtInLcase,
   gram.builtInEncode_for_uri,
+  // rdf-array
+  gram.builtInSeq,
+  gram.builtInSeqlen,
+  gram.builtInIsseq,
 ];
 
 const builtInPatch: typeof gram.builtInCall = {

@@ -1,0 +1,1 @@
+PREFIX : <http://ex/> SELECT ( SEQLEN( ?pts ) AS ?n ) ( SEQ( ) AS ?empty ) ( SEQ( ?s , "1"^^<http://www.w3.org/2001/XMLSchema#integer> ) AS ?pair ) WHERE { ?s :points ?pts . FILTER ( ( ISSEQ( ?pts ) && ( SEQLEN( SEQ( ) ) = "0"^^<http://www.w3.org/2001/XMLSchema#integer> ) ) ) }

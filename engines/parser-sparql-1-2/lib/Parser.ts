@@ -105,6 +105,9 @@ export const sparql12ParserBuilder = ParserBuilder.create(sparql11ParserBuilder)
     [g11.builtInIsblank.name]: [T12.ExpressionOperation];
     [g11.builtInIsliteral.name]: [T12.ExpressionOperation];
     [g11.builtInIsnumeric.name]: [T12.ExpressionOperation];
+    [g11.builtInSeq.name]: [T12.ExpressionOperation];
+    [g11.builtInSeqlen.name]: [T12.ExpressionOperation];
+    [g11.builtInIsseq.name]: [T12.ExpressionOperation];
     [g11.existsFunc.name]: [T12.ExpressionPatternOperation];
     [g11.notExistsFunc.name]: [T12.ExpressionPatternOperation];
     [g11.aggregateCount.name]: [T12.ExpressionAggregateOnWildcard | T12.ExpressionAggregateDefault];
@@ -136,6 +139,8 @@ export const sparql12ParserBuilder = ParserBuilder.create(sparql11ParserBuilder)
     [g11.additiveExpression.name]: [T12.Expression];
     [g11.multiplicativeExpression.name]: [T12.Expression];
     [g11.unaryExpression.name]: [T12.Expression];
+    [g11.postfixExpression.name]: [T12.Expression];
+    [g11.seqRef.name]: [T12.Expression];
     [g11.primaryExpression.name]: [T12.Expression];
     [g11.brackettedExpression.name]: [T12.Expression];
     [g11.iriOrFunction.name]: [T12.TermIri | T12.ExpressionFunctionCall];
@@ -205,6 +210,7 @@ export const sparql12ParserBuilder = ParserBuilder.create(sparql11ParserBuilder)
     [g11.graphGraphPattern.name]: [T12.PatternGraph];
     [g11.serviceGraphPattern.name]: [T12.PatternService];
     [g11.bind.name]: [T12.PatternBind];
+    [g11.unnest.name]: [T12.PatternUnnest];
     [g11.inlineData.name]: [T12.PatternValues];
     [g11.dataBlock.name]: [T12.PatternValues];
     [g11.inlineDataOneVar.name]: [T12.PatternValues];

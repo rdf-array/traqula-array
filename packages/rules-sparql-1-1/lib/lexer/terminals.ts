@@ -10,6 +10,7 @@ import {
   doubleNegativePattern,
   doublePattern,
   doublePositivePattern,
+  gapVarPattern,
   integerNegativePattern,
   integerPattern,
   integerPositivePattern,
@@ -120,8 +121,14 @@ export const nil = createToken({ name: 'Nil', pattern: nilPattern });
  * [[163]](https://www.w3.org/TR/sparql11-query/#rANON)
  */
 export const anon = createToken({ name: 'Anon', pattern: anonPattern });
+/**
+ * rdf-array: a named gap `...?rest` in a sequence pattern is one token, `...` followed by a variable with no
+ * space in between; `... ?rest` is a gap and then a member.
+ */
+export const gapVar = createToken({ name: 'GapVar', pattern: gapVarPattern, label: '...?var' });
 
 export const allTerminals = LexerBuilder.create().add(
+  gapVar,
   iriRef,
   pNameNs,
   pNameLn,

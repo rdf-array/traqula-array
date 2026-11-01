@@ -1,0 +1,164 @@
+{
+  "type": "project",
+  "input": {
+    "type": "filter",
+    "input": {
+      "type": "extend",
+      "input": {
+        "type": "unnest",
+        "input": {
+          "type": "unnest",
+          "input": {
+            "type": "bgp",
+            "patterns": [
+              {
+                "type": "pattern",
+                "termType": "Quad",
+                "subject": {
+                  "termType": "Variable",
+                  "value": "m"
+                },
+                "predicate": {
+                  "termType": "NamedNode",
+                  "value": "http://example.org/matrix"
+                },
+                "object": {
+                  "termType": "Variable",
+                  "value": "rows"
+                },
+                "graph": {
+                  "termType": "DefaultGraph",
+                  "value": ""
+                }
+              }
+            ]
+          },
+          "expression": {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Variable",
+              "value": "rows"
+            }
+          },
+          "variable": {
+            "termType": "Variable",
+            "value": "row"
+          },
+          "position": {
+            "termType": "Variable",
+            "value": "i"
+          }
+        },
+        "expression": {
+          "type": "expression",
+          "subType": "term",
+          "term": {
+            "termType": "Variable",
+            "value": "row"
+          }
+        },
+        "variable": {
+          "termType": "Variable",
+          "value": "x"
+        }
+      },
+      "variable": {
+        "termType": "Variable",
+        "value": "cols"
+      },
+      "expression": {
+        "type": "expression",
+        "subType": "operator",
+        "operator": "slice",
+        "args": [
+          {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Variable",
+              "value": "row"
+            }
+          },
+          {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Literal",
+              "value": "2",
+              "datatype": {
+                "termType": "NamedNode",
+                "value": "http://www.w3.org/2001/XMLSchema#integer"
+              }
+            }
+          },
+          {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Literal",
+              "value": "3",
+              "datatype": {
+                "termType": "NamedNode",
+                "value": "http://www.w3.org/2001/XMLSchema#integer"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "expression": {
+      "type": "expression",
+      "subType": "operator",
+      "operator": ">=",
+      "args": [
+        {
+          "type": "expression",
+          "subType": "term",
+          "term": {
+            "termType": "Variable",
+            "value": "x"
+          }
+        },
+        {
+          "type": "expression",
+          "subType": "term",
+          "term": {
+            "termType": "Literal",
+            "value": "90",
+            "datatype": {
+              "termType": "NamedNode",
+              "value": "http://www.w3.org/2001/XMLSchema#integer"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "variables": [
+    {
+      "termType": "Variable",
+      "value": "cols"
+    },
+    {
+      "termType": "Variable",
+      "value": "i"
+    },
+    {
+      "termType": "Variable",
+      "value": "m"
+    },
+    {
+      "termType": "Variable",
+      "value": "row"
+    },
+    {
+      "termType": "Variable",
+      "value": "rows"
+    },
+    {
+      "termType": "Variable",
+      "value": "x"
+    }
+  ]
+}

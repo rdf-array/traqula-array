@@ -64,6 +64,10 @@ export enum BuiltInCalls {
   Avg = 'builtInAvg',
   Sample = 'builtInSample',
   Group_concat = 'builtInGroup_concat',
+  // rdf-array: functions over sequences
+  Seq = 'builtInSeq',
+  Seqlen = 'builtInSeqlen',
+  Isseq = 'builtInIsseq',
 }
 
 function capitalize<T extends string>(string: T): Capitalize<T> {
@@ -188,6 +192,11 @@ export const groupConcat = createToken({
   label: 'GROUP_CONCAT',
 });
 
+// rdf-array: SEQ(...) builds a sequence, SEQLEN(e) is its length, isSEQ(e) tests for one; SEQLEN before SEQ
+export const seq = createToken({ name: capitalize(BuiltInCalls.Seq), pattern: /seq/i, label: 'SEQ' });
+export const seqlen = createToken({ name: capitalize(BuiltInCalls.Seqlen), pattern: /seqlen/i, label: 'SEQLEN' });
+export const isseq = createToken({ name: capitalize(BuiltInCalls.Isseq), pattern: /isseq/i, label: 'isSEQ' });
+
 export const allBuiltInCalls = LexerBuilder.create().add(
   langmatches,
   datatype,
@@ -249,5 +258,8 @@ export const allBuiltInCalls = LexerBuilder.create().add(
   avg,
   sample,
   groupConcat,
+  seqlen,
+  isseq,
+  seq,
   str,
 );

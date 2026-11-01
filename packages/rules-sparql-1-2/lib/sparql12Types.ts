@@ -15,7 +15,8 @@ export type Sparql12Nodes =
   | Path
   | ContextDefinition
   | Wildcard
-  | Term;
+  | Term
+  | T11.Gap;
 
 export type GraphRefBase = T11.GraphRefBase;
 export type GraphRefDefault = T11.GraphRefDefault;
@@ -155,7 +156,7 @@ export type TripleCollectionBase = Node & {
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
   identifier: T11.TermSequence;
-  elements: GraphNode[];
+  elements: (GraphNode | T11.Gap)[];
 };
 /**
  * The subject of the triples does not have a string manifestation.
@@ -226,6 +227,15 @@ export type PatternBind = PatternBase & {
   expression: Expression;
   variable: TermVariable;
 };
+/**
+ * rdf-array: `UNNEST(expr AS ?x AT ?i)`
+ */
+export type PatternUnnest = PatternBase & {
+  subType: 'unnest';
+  expression: Expression;
+  variable: TermVariable;
+  position?: TermVariable;
+};
 export type PatternService = PatternBase & {
   subType: 'service';
   name: TermIri | TermVariable;
@@ -252,6 +262,7 @@ export type Pattern =
   | PatternService
   | PatternFilter
   | PatternBind
+  | PatternUnnest
   | PatternValues
   | SubSelect;
 

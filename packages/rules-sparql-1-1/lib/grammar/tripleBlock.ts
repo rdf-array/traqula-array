@@ -4,6 +4,7 @@ import * as l from '../lexer/index.js';
 import type { SparqlGrammarRule, SparqlRule } from '../sparql11HelperTypes.js';
 import type {
   BasicGraphPattern,
+  Gap,
   GraphNode,
   Path,
   PatternBgp,
@@ -14,7 +15,7 @@ import type {
   TripleCollectionList,
   TripleNesting,
 } from '../Sparql11types.js';
-import { var_, varOrTerm, verb } from './general.js';
+import { gap, var_, varOrTerm, verb } from './general.js';
 import { path, pathGenerator } from './propertyPaths.js';
 
 function triplesDotSeperated(triplesSameSubjectSubrule: SparqlGrammarRule<string, BasicGraphPattern>):
@@ -279,15 +280,38 @@ export const objectPath = objectImpl('objectPath', true);
 function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlRule<T, TripleCollectionList> {
   return {
     name,
-    impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME }) => (C) => {
+    impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME, OR }) => (C) => {
       // rdf-array: an [RDF collection](https://www.w3.org/TR/sparql11-query/#collections) is one sequence
       // term holding its elements, not a cons list of rdf:first/rdf:rest triples.
-      const terms: GraphNode[] = [];
+      const terms: (GraphNode | Gap)[] = [];
 
       const startToken = CONSUME(l.symbols.LParen);
 
       AT_LEAST_ONE(() => {
-        terms.push(SUBRULE(allowPaths ? graphNodePath : graphNode));
+        if (allowPaths) {
+          // rdf-array: in a pattern (WHERE), a member may also be a gap `...` or a named gap `...?rest`;
+          // a template or data (`collection`, without paths) builds a sequence and has no gaps.
+          terms.push(OR<GraphNode | Gap>([
+            { ALT: () => SUBRULE(graphNodePath) },
+            { ALT: () => {
+              const token = CONSUME(l.symbols.ellipsis);
+              return ACTION(() => C.astFactory.gap(undefined, C.astFactory.sourceLocation(token)));
+            } },
+            { ALT: () => {
+              const token = CONSUME(l.terminals.gapVar);
+              return ACTION(() => {
+                const F = C.astFactory;
+                // The variable is the token without the leading `...`
+                const variableLoc = F.tracksSourceLocation ?
+                  F.sourceLocationSource(token.startOffset + 4, token.startOffset + token.image.length) :
+                  F.gen();
+                return F.gap(F.termVariable(token.image.slice(4), variableLoc), F.sourceLocation(token));
+              });
+            } },
+          ]));
+        } else {
+          terms.push(SUBRULE(graphNode));
+        }
       });
       const endToken = CONSUME(l.symbols.RParen);
 
@@ -299,7 +323,11 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
       for (const element of ast.elements) {
         // Separate the items, otherwise `( ?a ex:b )` would be generated as `( ?aex:b )`
         F.printFilter(ast, () => PRINT_WORD(''));
-        SUBRULE(graphNodePath, element);
+        if (F.isGap(element)) {
+          SUBRULE(gap, element);
+        } else {
+          SUBRULE(graphNodePath, element);
+        }
       }
       F.printFilter(ast, () => PRINT_WORD(')'));
     },

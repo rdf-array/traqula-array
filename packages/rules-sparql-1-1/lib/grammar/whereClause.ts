@@ -15,6 +15,7 @@ import type {
   PatternOptional,
   PatternService,
   PatternUnion,
+  PatternUnnest,
   PatternValues,
   SubSelect,
   TermIri,
@@ -150,6 +151,7 @@ export const graphPatternNotTriples: SparqlRule<'graphPatternNotTriples', Exclud
     { ALT: () => SUBRULE(serviceGraphPattern) },
     { ALT: () => SUBRULE(filter) },
     { ALT: () => SUBRULE(bind) },
+    { ALT: () => SUBRULE(unnest) },
     { ALT: () => SUBRULE(inlineData) },
   ]),
   gImpl: ({ SUBRULE }) => (ast) => {
@@ -175,6 +177,9 @@ export const graphPatternNotTriples: SparqlRule<'graphPatternNotTriples', Exclud
         break;
       case 'bind':
         SUBRULE(bind, ast);
+        break;
+      case 'unnest':
+        SUBRULE(unnest, ast);
         break;
       case 'values':
         SUBRULE(inlineData, ast);
@@ -268,6 +273,47 @@ export const bind: SparqlRule<'bind', PatternBind> = <const> {
     SUBRULE(expression, ast.expression);
     F.printFilter(ast, () => PRINT_WORD('AS'));
     SUBRULE(var_, ast.variable);
+    F.printFilter(ast, () => {
+      PRINT_WORD(')');
+      NEW_LINE();
+    });
+  },
+};
+
+/**
+ * rdf-array: `UNNEST(expr AS ?x AT ?i)` binds `?x` to each member of the sequence `expr` evaluates to and `?i`
+ * to its position, counting from 1; `AT ?i` may be left out.
+ */
+export const unnest: SparqlRule<'unnest', PatternUnnest> = <const> {
+  name: 'unnest',
+  impl: ({ ACTION, SUBRULE, SUBRULE1, SUBRULE2, CONSUME, OPTION }) => (C) => {
+    const unnestToken = CONSUME(l.unnest);
+    CONSUME(l.symbols.LParen);
+    const expressionVal = SUBRULE(expression);
+    CONSUME(l.as);
+    const variable = SUBRULE1(var_);
+    const position = OPTION(() => {
+      CONSUME(l.at);
+      return SUBRULE2(var_);
+    });
+    const close = CONSUME(l.symbols.RParen);
+
+    return ACTION(() => C.astFactory.patternUnnest(
+      expressionVal,
+      variable,
+      position,
+      C.astFactory.sourceLocation(unnestToken, close),
+    ));
+  },
+  gImpl: ({ SUBRULE, PRINT_WORD, NEW_LINE }) => (ast, { astFactory: F }) => {
+    F.printFilter(ast, () => PRINT_WORD('UNNEST', '('));
+    SUBRULE(expression, ast.expression);
+    F.printFilter(ast, () => PRINT_WORD('AS'));
+    SUBRULE(var_, ast.variable);
+    if (ast.position) {
+      F.printFilter(ast, () => PRINT_WORD('AT'));
+      SUBRULE(var_, ast.position);
+    }
     F.printFilter(ast, () => {
       PRINT_WORD(')');
       NEW_LINE();

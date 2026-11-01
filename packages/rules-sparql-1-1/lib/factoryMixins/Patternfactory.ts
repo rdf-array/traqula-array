@@ -12,6 +12,7 @@ import type {
   PatternOptional,
   PatternService,
   PatternUnion,
+  PatternUnnest,
   PatternValues,
   TermIri,
   TermVariable,
@@ -98,6 +99,29 @@ export function PatternFactoryMixin<TBase extends Constructor<AstCoreFactory>>(B
 
     public isPatternBind(obj: object): obj is SubTyped<NodeType, 'bind'> {
       return this.isOfSubType(obj, nodeType, 'bind');
+    }
+
+    /**
+     * rdf-array: `UNNEST(expression AS variable AT position)`, the position being optional.
+     */
+    public patternUnnest(
+      expression: Expression,
+      variable: TermVariable,
+      position: TermVariable | undefined,
+      loc: SourceLocation,
+    ): PatternUnnest {
+      return {
+        type: nodeType,
+        subType: 'unnest',
+        expression,
+        variable,
+        ...(position && { position }),
+        loc,
+      };
+    }
+
+    public isPatternUnnest(obj: object): obj is SubTyped<NodeType, 'unnest'> {
+      return this.isOfSubType(obj, nodeType, 'unnest');
     }
 
     public patternUnion(patterns: PatternGroup[], loc: SourceLocation): PatternUnion {

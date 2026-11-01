@@ -2,6 +2,8 @@ import { LexerBuilder, createToken } from '@traqula/core';
 
 export const LCurly = createToken({ name: 'LCurly', pattern: '{', label: '{' });
 export const RCurly = createToken({ name: 'RCurly', pattern: '}', label: '}' });
+// rdf-array: `...` is a gap in a sequence pattern and the range mark of a slice; it is tried before `.`
+export const ellipsis = createToken({ name: 'Ellipsis', pattern: '...', label: '...' });
 export const dot = createToken({ name: 'Dot', pattern: '.', label: '.' });
 export const comma = createToken({ name: 'Comma', pattern: ',', label: ',' });
 export const semi = createToken({ name: 'Semi', pattern: ';', label: ';' });
@@ -35,6 +37,7 @@ export const allSymbols = LexerBuilder.create().add(
   greaterThanEqual,
   LCurly,
   RCurly,
+  ellipsis,
   dot,
   comma,
   semi,

@@ -1,0 +1,5 @@
+PREFIX : <http://example.org/>
+SELECT ?m (SEQLEN(?rows) AS ?n) WHERE {
+  ?m :matrix ?rows .
+  OPTIONAL { UNNEST(?rows AS ?row AT ?i) FILTER(?i = 2) }
+}

@@ -1,0 +1,95 @@
+{
+  "type": "project",
+  "input": {
+    "type": "bgp",
+    "patterns": [
+      {
+        "type": "pattern",
+        "termType": "Quad",
+        "subject": {
+          "termType": "NamedNode",
+          "value": "http://example.org/tree"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://example.org/node"
+        },
+        "object": {
+          "termType": "Sequence",
+          "elements": [
+            {
+              "termType": "Literal",
+              "value": "root",
+              "datatype": {
+                "termType": "NamedNode",
+                "value": "http://www.w3.org/2001/XMLSchema#string"
+              }
+            },
+            {
+              "termType": "Sequence",
+              "elements": [
+                {
+                  "termType": "Variable",
+                  "value": "..."
+                },
+                {
+                  "termType": "Sequence",
+                  "elements": [
+                    {
+                      "termType": "Variable",
+                      "value": "child"
+                    },
+                    {
+                      "termType": "Sequence",
+                      "elements": [
+                        {
+                          "termType": "Variable",
+                          "value": "..."
+                        },
+                        {
+                          "termType": "Sequence",
+                          "elements": [
+                            {
+                              "termType": "Variable",
+                              "value": "grandchild"
+                            },
+                            {
+                              "termType": "Variable",
+                              "value": "kids"
+                            }
+                          ]
+                        },
+                        {
+                          "termType": "Variable",
+                          "value": "..."
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "termType": "Variable",
+                  "value": "..."
+                }
+              ]
+            }
+          ]
+        },
+        "graph": {
+          "termType": "Variable",
+          "value": "g"
+        }
+      }
+    ]
+  },
+  "variables": [
+    {
+      "termType": "Variable",
+      "value": "child"
+    },
+    {
+      "termType": "Variable",
+      "value": "grandchild"
+    }
+  ]
+}

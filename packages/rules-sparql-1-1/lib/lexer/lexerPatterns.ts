@@ -18,6 +18,8 @@ export const pNameLnPattern = new RegExp(`(${pNameNsPattern.source})(${pnLocalPa
 export const blankNodeLabelPattern = new RegExp(`_:((${pnCharsUPattern.source})|[0-9])(((${pnCharsPattern.source})|\\.)*(${pnCharsPattern.source}))?`);
 export const var1Pattern = new RegExp(`\\?(${varNamePattern.source})`);
 export const var2Pattern = new RegExp(`\\$(${varNamePattern.source})`);
+// rdf-array: a named gap `...?rest` in a sequence pattern, `...` and a variable with no space in between
+export const gapVarPattern = new RegExp(`\\.\\.\\.[?$](${varNamePattern.source})`);
 export const langTagPattern = /@[A-Za-z]+(-[\dA-Za-z]+)*/;
 export const integerPattern = /\d+/;
 export const decimalPattern = /\d+\.\d+/;

@@ -13,9 +13,30 @@ algebra carries it as an RDF/JS sequence term in triple patterns, with its varia
 `rdf:first`/`rdf:rest` ladder construction is gone, with `CommonIRIs.FIRST`, `REST` and `NIL`; a lone
 collection `{ ( ?x ) }` is a term with nothing to attach to, so it is the empty BGP. The fixtures of
 the collection tests (`dawg-syntax/forms/0[12]`, `dawg-syntax/lists/*`, `sparql12/*-inside-*-02`, the
-`collection-*` and `lists` statics) were re-recorded. Dependencies resolve to the rdf-array forks
-(`resolutions` in package.json); comunica-array links this checkout side by side. Its
-doc/rdf-array.md describes rdf-array and lists the sibling forks.
+`collection-*` and `lists` statics) were re-recorded.
+
+The grammars also parse the SPARQL-array syntax of
+[array-syntax.md](https://rdf-array.github.io/rdf-array/docs/array-syntax.html):
+
+- In a WHERE clause a sequence pattern may hold gaps: `...` matches any run of members and the
+  named gap `...?rest` (one token, no space) binds its variable to that run. The AST has a `Gap`
+  node (`{ type: 'gap', variable? }`) among the elements of a `TripleCollectionList` and its
+  `TermSequence`; the algebra spells a gap as the variable `...` or `...rest`
+  (`algebraUtils.isGapVariable`, `gapVariableName`), since the data model has no term for one.
+  Templates and `INSERT`/`DELETE DATA` keep plain collections.
+- `UNNEST(expr AS ?x AT ?i)` is the pattern `PatternUnnest` (`AT ?i` optional) and the algebra
+  operation `unnest` (`{ type: 'unnest', input, expression, variable, position? }`), beside
+  `extend`. Like a `BIND`, it may not rebind a variable in scope.
+- Expressions: `expr[i]` is the operator `index`, `expr[m...n]` and `expr[m...]` the operator
+  `slice` with three or two arguments (`expr[...n]` is read as `expr[1...n]`), `?x IN ?seq` and
+  `?x NOT IN ?seq` are `inseq` and `notinseq` (the right-hand side a variable, a `SEQ(…)` call or an
+  index of one; `IN ( … )` is unchanged), and `SEQ(…)`, `SEQLEN(e)` and `isSEQ(e)` are the operators
+  `seq`, `seqlen` and `isseq`. The lexer takes `...` before `.`, so `( 1... )` and `( :a... )` are a
+  member and a gap and `[2...4]` a slice, while `:a...b` stays one prefixed name.
+
+The fixtures `rdf-array-*` (statics) and `sparql-1.1/rdf-array/*` (algebra) exercise these.
+Dependencies resolve to the rdf-array forks (`resolutions` in package.json); comunica-array links
+this checkout side by side. Its doc/rdf-array.md describes rdf-array and lists the sibling forks.
 
 ---
 

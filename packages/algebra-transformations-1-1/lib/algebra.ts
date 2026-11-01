@@ -27,6 +27,7 @@ export enum Types {
   SERVICE = 'service',
   SLICE = 'slice',
   UNION = 'union',
+  UNNEST = 'unnest',
   VALUES = 'values',
 
   // Update
@@ -67,7 +68,7 @@ export enum ExpressionTypes {
  */
 export type Operation = Ask | Expression | Bgp | Construct | Describe | Distinct | Extend | From | Filter
   | Graph | Group | Join | LeftJoin | Minus | Nop | OrderBy | Path | Pattern | Project | PropertyPathSymbol
-  | Reduced | Service | Slice | Union | Values | Update | CompositeUpdate;
+  | Reduced | Service | Slice | Union | Unnest | Values | Update | CompositeUpdate;
 
 /**
  * Union type of all known SPARQL 1.1 expression operations.
@@ -415,6 +416,18 @@ export interface Slice extends Single {
  */
 export interface Union extends Multi {
   type: Types.UNION;
+}
+
+/**
+ * rdf-array: `UNNEST(expr AS ?x AT ?i)`: one solution per member of the sequence that `expression` evaluates to
+ * for a solution of the input, extended with `variable` bound to the member and, when present, `position`
+ * bound to its 1-based position. A solution whose expression is unbound or not a sequence yields nothing.
+ */
+export interface Unnest extends Single {
+  type: Types.UNNEST;
+  expression: Expression;
+  variable: RDF.Variable;
+  position?: RDF.Variable;
 }
 
 /**

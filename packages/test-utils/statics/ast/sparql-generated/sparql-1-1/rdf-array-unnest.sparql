@@ -1,0 +1,8 @@
+PREFIX : <http://ex/>
+SELECT ?m ?i ?j ?x WHERE {
+  ?m :matrix ?rows .
+  UNNEST( ?rows AS ?row AT ?i )
+  UNNEST( ?row AS ?x AT ?j )
+  UNNEST( ?rows AS ?r )
+  FILTER ( ISSEQ( ?r ) )
+}

@@ -1,8 +1,31 @@
 import type * as RDF from '@rdfjs/types';
 import type { TransformContext, VisitContext } from '@traqula/core';
 import { TransformerSubTyped } from '@traqula/core';
+import { DataFactory } from 'rdf-data-factory';
 import type * as A from './algebra.js';
 import { ExpressionTypes, Types } from './algebra.js';
+
+/**
+ * rdf-array: a gap in a sequence pattern is carried through the algebra as a variable whose name starts with
+ * `...`, which no SPARQL variable can: `...` for an unnamed gap, `...rest` for the named gap `...?rest`.
+ * The data model has no term for a gap, and a gap, like a variable, is a pattern element and not data.
+ */
+export const GAP_VARIABLE_PREFIX = '...';
+
+/**
+ * rdf-array: whether a term is the algebra's spelling of a gap in a sequence pattern.
+ */
+export function isGapVariable(term: RDF.Term): term is RDF.Variable {
+  return term.termType === 'Variable' && term.value.startsWith(GAP_VARIABLE_PREFIX);
+}
+
+/**
+ * rdf-array: the name of the variable a gap binds: `''` for an unnamed gap, `undefined` for a term that is
+ * not a gap.
+ */
+export function gapVariableName(term: RDF.Term): string | undefined {
+  return isGapVariable(term) ? term.value.slice(GAP_VARIABLE_PREFIX.length) : undefined;
+}
 
 const transformer = new TransformerSubTyped<A.Operation>({}, {
   // Optimization that causes search tree pruning -- do not step into RDF.Term objects, they are outside the algebra.
@@ -10,6 +33,7 @@ const transformer = new TransformerSubTyped<A.Operation>({}, {
   [Types.EXPRESSION]: { ignoreKeys: new Set([ 'name', 'term', 'wildcard', 'variable' ]) } satisfies VisitContext,
   [Types.DESCRIBE]: { ignoreKeys: new Set([ 'terms' ]) },
   [Types.EXTEND]: { ignoreKeys: new Set([ 'variable' ]) },
+  [Types.UNNEST]: { ignoreKeys: new Set([ 'variable', 'position' ]) },
   [Types.FROM]: { ignoreKeys: new Set([ 'default', 'named' ]) },
   [Types.GRAPH]: { ignoreKeys: new Set([ 'name' ]) },
   [Types.GROUP]: { ignoreKeys: new Set([ 'variables' ]) },
@@ -510,7 +534,13 @@ export function inScopeVariables(
 
   function visitTerm(term: RDF.Term): void {
     if (term.termType === 'Variable') {
-      addVariable(term);
+      // rdf-array: a named gap binds its variable; an unnamed gap binds nothing
+      const gapName = gapVariableName(term);
+      if (gapName === undefined) {
+        addVariable(term);
+      } else if (gapName !== '') {
+        addVariable(new DataFactory().variable(gapName));
+      }
     } else if (term.termType === 'Quad') {
       recurseTerm(term);
     } else if (term.termType === 'Sequence') {
@@ -553,6 +583,13 @@ export function inScopeVariables(
       [Types.EXTEND]: { visitor: op =>
         addVariable(op.variable),
       },
+      [Types.UNNEST]: { visitor: (op) => {
+        // rdf-array: UNNEST binds the member variable and, when present, the position variable
+        addVariable(op.variable);
+        if (op.position) {
+          addVariable(op.position);
+        }
+      } },
       [Types.GRAPH]: { visitor: (op) => {
         if (op.name.termType === 'Variable') {
           addVariable(op.name);

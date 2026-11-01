@@ -1,0 +1,8 @@
+PREFIX : <http://example.org/>
+SELECT * WHERE {
+  ?m :matrix ?rows .
+  UNNEST(?rows AS ?row AT ?i)
+  UNNEST(?row AS ?x)
+  BIND(?row[2...3] AS ?cols)
+  FILTER(?x >= 90)
+}

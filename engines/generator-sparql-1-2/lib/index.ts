@@ -86,6 +86,7 @@ export const sparql12GeneratorBuilder =
       [g11.graphGraphPattern.name]: [ T12.PatternGroup ];
       [g11.serviceGraphPattern.name]: [ T12.PatternService ];
       [g11.bind.name]: [ T12.PatternBind ];
+      [g11.unnest.name]: [ T12.PatternUnnest ];
       [g11.inlineData.name]: [ T12.PatternValues ];
       [g11.minusGraphPattern.name]: [ T12.PatternMinus ];
       [g11.groupOrUnionGraphPattern.name]: [ T12.PatternGroup | T12.PatternUnion ];

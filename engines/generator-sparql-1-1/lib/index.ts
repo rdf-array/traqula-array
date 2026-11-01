@@ -51,6 +51,7 @@ export const sparql11GeneratorBuilder = GeneratorBuilder.create(<const> [
     gram.varOrTerm,
     gram.var_,
     gram.graphTerm,
+    gram.gap,
   )
   .addMany(
     gram.rdfLiteral,
@@ -83,6 +84,7 @@ export const sparql11GeneratorBuilder = GeneratorBuilder.create(<const> [
     gram.graphGraphPattern,
     gram.serviceGraphPattern,
     gram.bind,
+    gram.unnest,
     gram.inlineData,
     gram.minusGraphPattern,
     gram.groupOrUnionGraphPattern,

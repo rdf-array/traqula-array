@@ -1,0 +1,5 @@
+PREFIX : <http://ex/>
+SELECT (SEQLEN(?pts) AS ?n) (SEQ() AS ?empty) (SEQ(?s, 1) AS ?pair) WHERE {
+  ?s :points ?pts .
+  FILTER(isSEQ(?pts) && SEQLEN(SEQ()) = 0)
+}

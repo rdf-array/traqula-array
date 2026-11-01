@@ -1,0 +1,288 @@
+{
+  "context": [
+    {
+      "type": "contextDef",
+      "subType": "prefix",
+      "key": "",
+      "value": {
+        "type": "term",
+        "subType": "namedNode",
+        "value": "http://ex/",
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 9,
+          "end": 21
+        }
+      },
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 0,
+        "end": 21
+      }
+    }
+  ],
+  "subType": "select",
+  "where": {
+    "type": "pattern",
+    "subType": "group",
+    "patterns": [
+      {
+        "type": "pattern",
+        "subType": "bgp",
+        "triples": [
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "variable",
+              "value": "m",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 51,
+                "end": 53
+              }
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "matrix",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 54,
+                "end": 61
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "term",
+              "subType": "variable",
+              "value": "rows",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 62,
+                "end": 67
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 51,
+              "end": 67
+            }
+          }
+        ],
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 51,
+          "end": 69
+        }
+      },
+      {
+        "type": "pattern",
+        "subType": "unnest",
+        "expression": {
+          "type": "term",
+          "subType": "variable",
+          "value": "rows",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 79,
+            "end": 84
+          }
+        },
+        "variable": {
+          "type": "term",
+          "subType": "variable",
+          "value": "row",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 88,
+            "end": 92
+          }
+        },
+        "position": {
+          "type": "term",
+          "subType": "variable",
+          "value": "i",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 96,
+            "end": 98
+          }
+        },
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 72,
+          "end": 99
+        }
+      },
+      {
+        "type": "pattern",
+        "subType": "unnest",
+        "expression": {
+          "type": "term",
+          "subType": "variable",
+          "value": "row",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 109,
+            "end": 113
+          }
+        },
+        "variable": {
+          "type": "term",
+          "subType": "variable",
+          "value": "x",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 117,
+            "end": 119
+          }
+        },
+        "position": {
+          "type": "term",
+          "subType": "variable",
+          "value": "j",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 123,
+            "end": 125
+          }
+        },
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 102,
+          "end": 126
+        }
+      },
+      {
+        "type": "pattern",
+        "subType": "unnest",
+        "expression": {
+          "type": "term",
+          "subType": "variable",
+          "value": "rows",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 136,
+            "end": 141
+          }
+        },
+        "variable": {
+          "type": "term",
+          "subType": "variable",
+          "value": "r",
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 145,
+            "end": 147
+          }
+        },
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 129,
+          "end": 148
+        }
+      },
+      {
+        "type": "pattern",
+        "subType": "filter",
+        "expression": {
+          "type": "expression",
+          "subType": "operation",
+          "operator": "isseq",
+          "args": [
+            {
+              "type": "term",
+              "subType": "variable",
+              "value": "r",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 164,
+                "end": 166
+              }
+            }
+          ],
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 157,
+            "end": 168
+          }
+        },
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 151,
+          "end": 168
+        }
+      }
+    ],
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 47,
+      "end": 170
+    }
+  },
+  "solutionModifiers": {},
+  "datasets": {
+    "type": "datasetClauses",
+    "clauses": [],
+    "loc": {
+      "sourceLocationType": "noMaterialize"
+    }
+  },
+  "variables": [
+    {
+      "type": "term",
+      "subType": "variable",
+      "value": "m",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 29,
+        "end": 31
+      }
+    },
+    {
+      "type": "term",
+      "subType": "variable",
+      "value": "i",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 32,
+        "end": 34
+      }
+    },
+    {
+      "type": "term",
+      "subType": "variable",
+      "value": "j",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 35,
+        "end": 37
+      }
+    },
+    {
+      "type": "term",
+      "subType": "variable",
+      "value": "x",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 38,
+        "end": 40
+      }
+    }
+  ],
+  "loc": {
+    "sourceLocationType": "inlinedSource",
+    "newSource": "PREFIX : <http://ex/>\nSELECT ?m ?i ?j ?x WHERE {\n  ?m :matrix ?rows .\n  UNNEST(?rows AS ?row AT ?i)\n  UNNEST(?row AS ?x AT ?j)\n  UNNEST(?rows AS ?r)\n  FILTER(isSEQ(?r))\n}\n",
+    "start": 0,
+    "end": 9007199254740991,
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 0,
+      "end": 170
+    },
+    "startOnNew": 0,
+    "endOnNew": 170
+  },
+  "type": "query"
+}

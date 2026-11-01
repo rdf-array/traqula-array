@@ -1,0 +1,7 @@
+PREFIX : <http://example.org/>
+SELECT * WHERE {
+  ?obs :component ( ... ( "8480-6" ?name ( ?v ?unit ) ) ... ) .
+  :poly :points ( ?h ...?t ) .
+  :poly :points ( ...?pre ?x ... ) .
+  ( ... ?first ) :q ?z .
+}

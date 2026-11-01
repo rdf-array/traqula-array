@@ -1,9 +1,10 @@
 import * as l from '../lexer/index.js';
-import type { SparqlGrammarRule, SparqlRule } from '../sparql11HelperTypes.js';
+import type { SparqlGeneratorRule, SparqlGrammarRule, SparqlRule } from '../sparql11HelperTypes.js';
 import type {
   ContextDefinition,
   ContextDefinitionBase,
   ContextDefinitionPrefix,
+  Gap,
   GraphTerm,
   Term,
   TermIri,
@@ -164,11 +165,26 @@ export const graphTerm: SparqlRule<'graphTerm', GraphTerm> = <const> {
       F.printFilter(ast, () => PRINT_WORD('('));
       for (const element of ast.elements) {
         F.printFilter(ast, () => PRINT_WORD(''));
-        SUBRULE(varOrTerm, element);
+        if (F.isGap(element)) {
+          SUBRULE(gap, element);
+        } else {
+          SUBRULE(varOrTerm, element);
+        }
       }
       F.printFilter(ast, () => PRINT_WORD(')'));
     } else {
       SUBRULE(blankNode, ast);
     }
+  },
+};
+
+/**
+ * rdf-array: a gap in a sequence pattern prints as `...`, a named gap as `...?variable` (one token, no space).
+ * Gaps are parsed by the collection rules, since they occur only there.
+ */
+export const gap: SparqlGeneratorRule<'gap', Gap> = <const> {
+  name: 'gap',
+  gImpl: ({ PRINT_WORD }) => (ast, { astFactory: F }) => {
+    F.printFilter(ast, () => PRINT_WORD(ast.variable ? `...?${ast.variable.value}` : '...'));
   },
 };

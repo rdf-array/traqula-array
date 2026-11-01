@@ -1,0 +1,5 @@
+PREFIX : <http://ex/>
+SELECT ?s WHERE {
+  ?s :points ?pts .
+  FILTER ( ( ( ( ( ( SEQ( "3"^^<http://www.w3.org/2001/XMLSchema#integer> , "4"^^<http://www.w3.org/2001/XMLSchema#integer> ) IN ?pts ) && ( ?s NOT IN ?pts[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>] ) ) && ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> IN SEQ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> , "2"^^<http://www.w3.org/2001/XMLSchema#integer> ) ) ) && ( "2"^^<http://www.w3.org/2001/XMLSchema#integer> NOT IN SEQ( SEQ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> ) , "2"^^<http://www.w3.org/2001/XMLSchema#integer> ) [ "1"^^<http://www.w3.org/2001/XMLSchema#integer>] ) ) && ( ?s IN ( ?pts , :a ) ) ) )
+}

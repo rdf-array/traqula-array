@@ -12,9 +12,11 @@ import { TermFactoryMixin } from './factoryMixins/TermFactory.js';
 import { UpdateOperationFactoryMixin } from './factoryMixins/UpdateOperationFactory.js';
 import type {
   DatasetClauses,
+  Gap,
   GraphNode,
   GraphQuads,
   PatternBgp,
+  SequenceMember,
   Sparql11Nodes,
   Term,
   TermBlank,
@@ -121,18 +123,29 @@ export class AstFactory extends asArg(AstCoreFactory)
   }
 
   /**
-   * rdf-array: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
-   * list (or a nested list) contributes its triples, and the sequence holds its identifier.
+   * rdf-array: a gap in a sequence pattern, `...` when unnamed, `...?variable` when it binds the run it matches.
    */
-  public tripleCollectionList(elements: GraphNode[], loc: SourceLocation): TripleCollectionList {
+  public gap(variable: TermVariable | undefined, loc: SourceLocation): Gap {
+    return { type: 'gap', ...(variable && { variable }), loc };
+  }
+
+  public isGap(obj: object): obj is Typed<'gap'> & { variable?: TermVariable } {
+    return this.isOfType(obj, 'gap');
+  }
+
+  /**
+   * rdf-array: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
+   * list (or a nested list) contributes its triples, and the sequence holds its identifier. A gap stays a gap.
+   */
+  public tripleCollectionList(elements: (GraphNode | Gap)[], loc: SourceLocation): TripleCollectionList {
     const triples: TripleNesting[] = [];
-    const identifiers: Term[] = elements.map((element) => {
+    const identifiers: SequenceMember[] = elements.map((element) => {
       if (this.isTripleCollection(element)) {
         const collection = element;
         triples.push(...collection.triples);
         return collection.identifier;
       }
-      return <Term> element;
+      return <SequenceMember> element;
     });
     return {
       type: 'tripleCollection',

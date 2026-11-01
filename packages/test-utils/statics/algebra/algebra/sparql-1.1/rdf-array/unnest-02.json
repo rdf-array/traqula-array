@@ -1,0 +1,115 @@
+{
+  "type": "project",
+  "input": {
+    "type": "extend",
+    "input": {
+      "type": "leftjoin",
+      "input": [
+        {
+          "type": "bgp",
+          "patterns": [
+            {
+              "type": "pattern",
+              "termType": "Quad",
+              "subject": {
+                "termType": "Variable",
+                "value": "m"
+              },
+              "predicate": {
+                "termType": "NamedNode",
+                "value": "http://example.org/matrix"
+              },
+              "object": {
+                "termType": "Variable",
+                "value": "rows"
+              },
+              "graph": {
+                "termType": "DefaultGraph",
+                "value": ""
+              }
+            }
+          ]
+        },
+        {
+          "type": "unnest",
+          "input": {
+            "type": "bgp",
+            "patterns": []
+          },
+          "expression": {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Variable",
+              "value": "rows"
+            }
+          },
+          "variable": {
+            "termType": "Variable",
+            "value": "row"
+          },
+          "position": {
+            "termType": "Variable",
+            "value": "i"
+          }
+        }
+      ],
+      "expression": {
+        "type": "expression",
+        "subType": "operator",
+        "operator": "=",
+        "args": [
+          {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Variable",
+              "value": "i"
+            }
+          },
+          {
+            "type": "expression",
+            "subType": "term",
+            "term": {
+              "termType": "Literal",
+              "value": "2",
+              "datatype": {
+                "termType": "NamedNode",
+                "value": "http://www.w3.org/2001/XMLSchema#integer"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "variable": {
+      "termType": "Variable",
+      "value": "n"
+    },
+    "expression": {
+      "type": "expression",
+      "subType": "operator",
+      "operator": "seqlen",
+      "args": [
+        {
+          "type": "expression",
+          "subType": "term",
+          "term": {
+            "termType": "Variable",
+            "value": "rows"
+          }
+        }
+      ]
+    }
+  },
+  "variables": [
+    {
+      "termType": "Variable",
+      "value": "m"
+    },
+    {
+      "termType": "Variable",
+      "value": "n"
+    }
+  ]
+}

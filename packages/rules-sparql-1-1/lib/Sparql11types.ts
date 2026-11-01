@@ -15,7 +15,8 @@ export type Sparql11Nodes =
   | Path
   | ContextDefinition
   | Wildcard
-  | Term;
+  | Term
+  | Gap;
 
 export type GraphRefBase = Node & {
   type: 'graphRef';
@@ -168,12 +169,12 @@ export type TripleCollectionBase = Node & {
 /**
  * rdf-array: a collection `( e1 e2 ... )` is one sequence term: the identifier is the sequence of the
  * elements' identifiers, and the triples are those contributed by the blank node property lists
- * (and nested lists) among the elements.
+ * (and nested lists) among the elements. In a WHERE clause an element may be a {@link Gap}.
  */
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
   identifier: TermSequence;
-  elements: GraphNode[];
+  elements: (GraphNode | Gap)[];
 };
 /**
  * Bot subject and predicate of the triples do not have a string manifestation.
@@ -237,6 +238,16 @@ export type PatternBind = PatternBase & {
   expression: Expression;
   variable: TermVariable;
 };
+/**
+ * rdf-array: `UNNEST(expr AS ?x AT ?i)` yields one solution per member of the sequence `expr` evaluates to,
+ * binding `?x` to the member and, when `AT` is given, `?i` to its 1-based position.
+ */
+export type PatternUnnest = PatternBase & {
+  subType: 'unnest';
+  expression: Expression;
+  variable: TermVariable;
+  position?: TermVariable;
+};
 export type PatternService = PatternBase & {
   subType: 'service';
   name: TermIri | TermVariable;
@@ -264,6 +275,7 @@ export type Pattern =
   | PatternService
   | PatternFilter
   | PatternBind
+  | PatternUnnest
   | PatternValues
   | SubSelect;
 
@@ -433,9 +445,18 @@ export type TermIri = TermIriFull | TermIriPrefixed;
 export type TermBlank = TermBase & { subType: 'blankNode' } & { label: string };
 
 /**
+ * rdf-array: a gap `...` in a sequence pattern matches any run of members; a named gap `...?rest` also binds
+ * its variable to that run, as a sequence. Gaps occur only in the sequence patterns of a WHERE clause.
+ */
+export type Gap = Node & { type: 'gap'; variable?: TermVariable };
+/**
+ * rdf-array: a member of a sequence term: a term, or, in a pattern, a gap.
+ */
+export type SequenceMember = Term | Gap;
+/**
  * rdf-array: a sequence term, `( e1 e2 ... )`, holding its elements in order; `()` is the empty sequence.
  */
-export type TermSequence = TermBase & { subType: 'sequence'; elements: Term[] };
+export type TermSequence = TermBase & { subType: 'sequence'; elements: SequenceMember[] };
 
 export type GraphTerm = TermIri | TermBlank | TermLiteral | TermSequence;
 export type Term = GraphTerm | TermVariable;

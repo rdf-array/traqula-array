@@ -58,6 +58,9 @@ export const usingClause = createToken({ name: 'UsingClause', pattern: /using/i,
 export const optional = createToken({ name: 'Optional', pattern: /optional/i, label: 'OPTIONAL' });
 export const service = createToken({ name: 'Service', pattern: /service/i, label: 'SERVICE' });
 export const bind = createToken({ name: 'Bind', pattern: /bind/i, label: 'BIND' });
+// rdf-array: `UNNEST(expr AS ?x AT ?i)` binds each member of a sequence and its position
+export const unnest = createToken({ name: 'Unnest', pattern: /unnest/i, label: 'UNNEST' });
+export const at = createToken({ name: 'At', pattern: /at/i, label: 'AT' });
 export const undef = createToken({ name: 'Undef', pattern: /undef/i, label: 'UNDEF' });
 export const minus = createToken({ name: 'Minus', pattern: /minus/i, label: 'MINUS' });
 export const union = createToken({ name: 'Union', pattern: /union/i, label: 'UNION' });
@@ -110,6 +113,8 @@ export const allBaseTokens = LexerBuilder.create().add(
   optional,
   service,
   bind,
+  unnest,
+  at,
   undef,
   minus,
   union,

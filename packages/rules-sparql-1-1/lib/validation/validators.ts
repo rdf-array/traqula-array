@@ -181,12 +181,30 @@ export function findPatternBoundedVars(
     recurse([ op.name, ...op.patterns ]);
   } else if (F.isPatternBind(op)) {
     recurse(op.variable);
+  } else if (F.isPatternUnnest(op)) {
+    // rdf-array: UNNEST binds its member variable and, when given, its position variable
+    recurse([ op.variable, op.position ]);
   } else if (F.isTermSequence(op)) {
-    // rdf-array: variables inside a sequence term
+    // rdf-array: variables inside a sequence term, named gaps included
     recurse(op.elements);
+  } else if (F.isGap(op)) {
+    recurse(op.variable);
   } else if (F.isTermVariable(op)) {
     boundedVars.add(op.value);
   }
+}
+
+/**
+ * rdf-array: the variables a BIND or an UNNEST introduces; none for any other pattern.
+ */
+function introducedVariables(pattern: Pattern): TermVariable[] {
+  if (F.isPatternBind(pattern)) {
+    return [ pattern.variable ];
+  }
+  if (F.isPatternUnnest(pattern)) {
+    return pattern.position ? [ pattern.variable, pattern.position ] : [ pattern.variable ];
+  }
+  return [];
 }
 
 /**
@@ -195,8 +213,10 @@ export function findPatternBoundedVars(
  *    group graph pattern in which it is used.
  */
 export function checkNote13(patterns: Pattern[]): void {
+  // rdf-array: UNNEST introduces variables as BIND does, and is held to the same rule
   for (const [ index, pattern ] of patterns.entries()) {
-    if (F.isPatternBind(pattern) && index > 0 && F.isPatternBgp(patterns[index - 1])) {
+    const introduced = introducedVariables(pattern);
+    if (introduced.length > 0 && index > 0 && F.isPatternBgp(patterns[index - 1])) {
       const bgp = patterns[index - 1];
       // Find variables used.
       const variables: TermVariable[] = [];
@@ -204,8 +224,10 @@ export function checkNote13(patterns: Pattern[]): void {
       transformer.visitNodeSpecific(bgp, {}, { term: { variable: { visitor: (var_) => {
         variables.push(var_);
       } }}});
-      if (variables.some(var_ => var_.value === pattern.variable.value)) {
-        throw new Error(`Variable used to bind is already bound (?${pattern.variable.value})`);
+      for (const bound of introduced) {
+        if (variables.some(var_ => var_.value === bound.value)) {
+          throw new Error(`Variable used to bind is already bound (?${bound.value})`);
+        }
       }
     }
   }
@@ -213,9 +235,12 @@ export function checkNote13(patterns: Pattern[]): void {
   const boundedVars = new Set<string>();
   for (const pattern of patterns) {
     // Element can be bind, in that case, check note 13. If it is not, buildup set of bounded variables.
-    if (F.isPatternBind(pattern)) {
-      if (boundedVars.has(pattern.variable.value)) {
-        throw new Error(`Variable used to bind is already bound (?${pattern.variable.value})`);
+    const introduced = introducedVariables(pattern);
+    if (introduced.length > 0) {
+      for (const bound of introduced) {
+        if (boundedVars.has(bound.value)) {
+          throw new Error(`Variable used to bind is already bound (?${bound.value})`);
+        }
       }
     } else {
       findPatternBoundedVars(pattern, boundedVars);

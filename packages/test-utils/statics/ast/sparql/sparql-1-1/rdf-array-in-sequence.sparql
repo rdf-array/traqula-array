@@ -1,0 +1,5 @@
+PREFIX : <http://ex/>
+SELECT ?s WHERE {
+  ?s :points ?pts .
+  FILTER(SEQ(3, 4) IN ?pts && ?s NOT IN ?pts[1] && 1 IN SEQ(1, 2) && 2 NOT IN SEQ(SEQ(1), 2)[1] && ?s IN (?pts, :a))
+}

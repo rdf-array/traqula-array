@@ -4,6 +4,26 @@ import { isTriple, AlgebraFactory, algebraUtils } from '../lib/index.js';
 describe('algebraFactory edge cases', () => {
   const AF = new AlgebraFactory();
 
+  it('createUnnest keeps the position only when given (rdf-array)', ({ expect }) => {
+    const input = AF.createBgp([]);
+    const expression = AF.createTermExpression(AF.dataFactory.variable!('rows'));
+    const variable = AF.dataFactory.variable!('row');
+    const position = AF.dataFactory.variable!('i');
+    expect(AF.createUnnest(input, expression, variable, position))
+      .toEqual({ type: 'unnest', input, expression, variable, position });
+    expect(AF.createUnnest(input, expression, variable)).toEqual({ type: 'unnest', input, expression, variable });
+  });
+
+  it('spells gaps as variables prefixed with `...` (rdf-array)', ({ expect }) => {
+    expect(algebraUtils.isGapVariable(AF.dataFactory.variable!('...'))).toBe(true);
+    expect(algebraUtils.isGapVariable(AF.dataFactory.variable!('...rest'))).toBe(true);
+    expect(algebraUtils.isGapVariable(AF.dataFactory.variable!('rest'))).toBe(false);
+    expect(algebraUtils.isGapVariable(AF.dataFactory.namedNode('...'))).toBe(false);
+    expect(algebraUtils.gapVariableName(AF.dataFactory.variable!('...'))).toBe('');
+    expect(algebraUtils.gapVariableName(AF.dataFactory.variable!('...rest'))).toBe('rest');
+    expect(algebraUtils.gapVariableName(AF.dataFactory.variable!('rest'))).toBeUndefined();
+  });
+
   it('createTerm handles $-prefixed variable syntax', ({ expect }) => {
     const term = AF.createTerm('$myVar');
     expect(term).toMatchObject({ termType: 'Variable', value: 'myVar' });

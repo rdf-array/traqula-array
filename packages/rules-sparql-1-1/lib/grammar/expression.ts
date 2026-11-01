@@ -8,7 +8,8 @@ import type {
   TermIri,
   TermLiteral,
 } from '../Sparql11types.js';
-import { aggregate, builtInCall } from './builtIn.js';
+import { CommonIRIs } from '../utils.js';
+import { aggregate, builtInCall, builtInSeq } from './builtIn.js';
 import {
   var_,
   varOrTerm,
@@ -103,8 +104,11 @@ export const expressionList: SparqlGrammarRule<'expressionList', Wrap<Expression
   ]),
 };
 
-const optimizedBracketsInfixOperator = new Set([ '||', '&&', '=', '!=', '<', '>', '<=', '>=', '+', '-', '*', '/' ]);
-const infixOperators = new Set([ 'in', 'notin', '||', '&&', '=', '!=', '<', '>', '<=', '>=', '+', '-', '*', '/' ]);
+// rdf-array: `inseq` and `notinseq` are `IN` and `NOT IN` with a sequence on the right-hand side
+const optimizedBracketsInfixOperator =
+  new Set([ 'inseq', 'notinseq', '||', '&&', '=', '!=', '<', '>', '<=', '>=', '+', '-', '*', '/' ]);
+const infixOperators =
+  new Set([ 'in', 'notin', 'inseq', 'notinseq', '||', '&&', '=', '!=', '<', '>', '<=', '>=', '+', '-', '*', '/' ]);
 const prefixOperator: Record<string, string> = { '!': '', uplus: '+', uminus: '-' };
 
 /**
@@ -113,7 +117,7 @@ const prefixOperator: Record<string, string> = { '!': '', uplus: '+', uminus: '-
 export const expression: SparqlRule<'expression', Expression> = <const> {
   name: 'expression',
   impl: ({ SUBRULE }) => () => SUBRULE(conditionalOrExpression),
-  gImpl: ({ SUBRULE, PRINT_WORD }) => (ast, { astFactory: F }) => {
+  gImpl: ({ SUBRULE, PRINT, PRINT_WORD }) => (ast, { astFactory: F }) => {
     if (F.isTerm(ast)) {
       SUBRULE(varOrTerm, ast);
     } else if (F.isExpressionPatternOperation(ast)) {
@@ -124,15 +128,28 @@ export const expression: SparqlRule<'expression', Expression> = <const> {
       SUBRULE(iriOrFunction, ast);
     } else if (F.isExpressionAggregate(ast)) {
       SUBRULE(aggregate, ast);
+    } else if (ast.operator === 'index' || ast.operator === 'slice') {
+      // rdf-array: `seq[i]`, `seq[m...n]` and `seq[m...]`
+      const [ seq, from, to ] = ast.args;
+      SUBRULE(expression, seq);
+      F.printFilter(ast, () => PRINT('['));
+      SUBRULE(expression, from);
+      if (ast.operator === 'slice') {
+        F.printFilter(ast, () => PRINT('...'));
+        if (to) {
+          SUBRULE(expression, to);
+        }
+      }
+      F.printFilter(ast, () => PRINT(']'));
     } else if (infixOperators.has(ast.operator)) {
       // We know it will be expressionOperator
       const [ left, ...right ] = ast.args;
       F.printFilter(ast, () => PRINT_WORD('('));
       SUBRULE(expression, left);
       F.printFilter(ast, () => {
-        if (ast.operator === 'notin') {
+        if (ast.operator === 'notin' || ast.operator === 'notinseq') {
           PRINT_WORD('NOT IN');
-        } else if (ast.operator === 'in') {
+        } else if (ast.operator === 'in' || ast.operator === 'inseq') {
           PRINT_WORD('IN');
         } else {
           PRINT_WORD(ast.operator.toUpperCase());
@@ -233,7 +250,7 @@ export const valueLogical: SparqlGrammarRule<'valueLogical', Expression> = <cons
 export const relationalExpression:
 SparqlGrammarRule<'relationalExpression', ExpressionOperation | Expression> = <const>{
   name: 'relationalExpression',
-  impl: ({ ACTION, CONSUME, SUBRULE1, SUBRULE2, OPTION, OR1, OR2, OR3 }) => (C) => {
+  impl: ({ ACTION, CONSUME, SUBRULE1, SUBRULE2, OPTION, OR1, OR2, OR3, OR4 }) => (C) => {
     const args1 = SUBRULE1(numericExpression);
     const expression = OPTION<ExpressionOperation>(() =>
       OR1<ExpressionOperation>([
@@ -259,15 +276,51 @@ SparqlGrammarRule<'relationalExpression', ExpressionOperation | Expression> = <c
             { ALT: () => CONSUME(l.in_) },
             { ALT: () => CONSUME(l.notIn) },
           ]);
-          const args = SUBRULE1(expressionList);
-          return ACTION(() => C.astFactory.expressionOperation(
-            operator.image,
-            [ args1, ...args.val ],
-            C.astFactory.sourceLocation(args1, args),
-          ));
+          return OR4<ExpressionOperation>([
+            { ALT: () => {
+              const args = SUBRULE1(expressionList);
+              return ACTION(() => C.astFactory.expressionOperation(
+                operator.image,
+                [ args1, ...args.val ],
+                C.astFactory.sourceLocation(args1, args),
+              ));
+            } },
+            { ALT: () => {
+              // rdf-array: `?x IN ?seq` is true when some member of the sequence equals `?x`
+              const seq = SUBRULE1(seqRef);
+              return ACTION(() => C.astFactory.expressionOperation(
+                `${C.astFactory.formatOperator(operator.image)}seq`,
+                [ args1, seq ],
+                C.astFactory.sourceLocation(args1, seq),
+              ));
+            } },
+          ]);
         } },
       ]));
     return expression ?? args1;
+  },
+};
+
+/**
+ * rdf-array: the right-hand side of `IN` when it is a sequence: a variable, a `SEQ(...)` call, or an index of
+ * either, so that `IN (` still opens an expression list.
+ */
+export const seqRef: SparqlGrammarRule<'seqRef', Expression> = <const> {
+  name: 'seqRef',
+  impl: ({ ACTION, CONSUME, MANY, OR, SUBRULE1, SUBRULE2 }) => (C) => {
+    let ref = OR<Expression>([
+      { ALT: () => SUBRULE1(var_) },
+      { ALT: () => SUBRULE1(builtInSeq) },
+    ]);
+    MANY(() => {
+      CONSUME(l.symbols.LSquare);
+      const index = SUBRULE2(expression);
+      const close = CONSUME(l.symbols.RSquare);
+      ACTION(() => {
+        ref = C.astFactory.expressionOperation('index', [ ref, index ], C.astFactory.sourceLocation(ref, close));
+      });
+    });
+    return ref;
   },
 };
 
@@ -386,14 +439,14 @@ export const multiplicativeExpression: SparqlGrammarRule<'multiplicativeExpressi
 export const unaryExpression: SparqlGrammarRule<'unaryExpression', Expression> = <const> {
   name: 'unaryExpression',
   impl: ({ ACTION, CONSUME, SUBRULE1, SUBRULE2, OR1, OR2 }) => C => OR1<Expression>([
-    { ALT: () => SUBRULE1(primaryExpression) },
+    { ALT: () => SUBRULE1(postfixExpression) },
     { ALT: () => {
       const operator = OR2([
         { ALT: () => CONSUME(l.symbols.exclamation) },
         { ALT: () => CONSUME(l.symbols.opPlus) },
         { ALT: () => CONSUME(l.symbols.opMinus) },
       ]);
-      const expr = SUBRULE2(primaryExpression);
+      const expr = SUBRULE2(postfixExpression);
       return ACTION(() => C.astFactory.expressionOperation(
         operator.image === '!' ? '!' : (operator.image === '+' ? 'UPLUS' : 'UMINUS'),
         [ expr ],
@@ -401,6 +454,55 @@ export const unaryExpression: SparqlGrammarRule<'unaryExpression', Expression> =
       ));
     } },
   ]),
+};
+
+/**
+ * rdf-array: `expr[i]` is the i-th member of a sequence, counting from 1, and `expr[m...n]`, `expr[m...]` and
+ * `expr[...n]` are slices, both ends included and clamped to the sequence. `[...n]` is `[1...n]`, so it is
+ * parsed as that; an open end `[m...]` has no third argument. `expr[...]` is refused.
+ */
+export const postfixExpression: SparqlGrammarRule<'postfixExpression', Expression> = <const> {
+  name: 'postfixExpression',
+  impl: ({ ACTION, CONSUME, CONSUME1, CONSUME2, MANY, OPTION1, OPTION2, OR, SUBRULE, SUBRULE1, SUBRULE2, SUBRULE3 }) =>
+    (C) => {
+      let expr = SUBRULE(primaryExpression);
+      MANY(() => {
+        CONSUME(l.symbols.LSquare);
+        const args = OR<{ operator: 'index' | 'slice'; args: Expression[] }>([
+          { ALT: () => {
+            CONSUME1(l.symbols.ellipsis);
+            const to = SUBRULE1(expression);
+            return ACTION(() => {
+              const F = C.astFactory;
+              const one = F.termLiteral(
+                F.sourceLocationNoMaterialize(),
+                '1',
+                F.termNamed(F.sourceLocationNoMaterialize(), CommonIRIs.INTEGER),
+              );
+              return { operator: 'slice', args: [ one, to ]};
+            });
+          } },
+          { ALT: () => {
+            const from = SUBRULE2(expression);
+            const slice = OPTION1(() => {
+              CONSUME2(l.symbols.ellipsis);
+              const to = OPTION2(() => SUBRULE3(expression));
+              return to ? [ from, to ] : [ from ];
+            });
+            return slice ? { operator: 'slice', args: slice } : { operator: 'index', args: [ from ]};
+          } },
+        ]);
+        const close = CONSUME(l.symbols.RSquare);
+        ACTION(() => {
+          expr = C.astFactory.expressionOperation(
+            args.operator,
+            [ expr, ...args.args ],
+            C.astFactory.sourceLocation(expr, close),
+          );
+        });
+      });
+      return expr;
+    },
 };
 
 /**

@@ -34,9 +34,13 @@ export function langTagHasCorrectRange(literal: TermLiteral): void {
 }
 
 export function findPatternBoundedVars(
-  iter: SparqlQuery | Pattern | TripleNesting | TripleCollection | Path | Term | Wildcard,
+  iter: SparqlQuery | Pattern | TripleNesting | TripleCollection | Path | Term | Wildcard | T11.Gap | undefined,
   boundedVars: Set<string>,
 ): void {
+  if (iter === undefined) {
+    // rdf-array: an absent UNNEST position or gap variable
+    return;
+  }
   if (F.isQuery(iter) || F.isUpdate(iter)) {
     if (F.isQuerySelect(iter) || F.isQueryDescribe(iter)) {
       if (iter.where && iter.variables.some(x => F.isWildcard(x))) {
@@ -107,6 +111,13 @@ export function findPatternBoundedVars(
       findPatternBoundedVars(iter.name, boundedVars);
     }
   } else if (F.isPatternBind(iter)) {
+    findPatternBoundedVars(iter.variable, boundedVars);
+  } else if (F.isPatternUnnest(iter)) {
+    // rdf-array: UNNEST binds its member variable and, when given, its position variable
+    findPatternBoundedVars(iter.variable, boundedVars);
+    findPatternBoundedVars(iter.position, boundedVars);
+  } else if (F.isGap(iter)) {
+    // rdf-array: a named gap binds its variable
     findPatternBoundedVars(iter.variable, boundedVars);
   } else if (F.isPatternValues(iter)) {
     for (const variable of Object.keys(iter.values.at(0) ?? {})) {

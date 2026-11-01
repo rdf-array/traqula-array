@@ -13,6 +13,7 @@ import type {
   TripleNesting,
 } from '@traqula/rules-sparql-1-1';
 import { Algebra } from '../index.js';
+import { gapVariableName } from '../util.js';
 import type { AstIndir } from './core.js';
 import { translateAlgPureExpression } from './expression.js';
 import { translateAlgPatternIntoGroup, translateAlgPatternNew } from './pattern.js';
@@ -43,8 +44,14 @@ export const translateAlgTerm: AstIndir<'translateTerm', Term, [RDF.Term]> = {
       );
     }
     if (term.termType === 'Sequence') {
-      // rdf-array: a sequence term prints as `( e1 e2 ... )`
-      return F.termSequence(term.elements.map(element => SUBRULE(translateAlgTerm, element)), F.gen());
+      // rdf-array: a sequence term prints as `( e1 e2 ... )`; a gap variable (`...`, `...name`) becomes a gap again
+      return F.termSequence(term.elements.map((element) => {
+        const gapName = gapVariableName(element);
+        if (gapName !== undefined) {
+          return F.gap(gapName === '' ? undefined : F.termVariable(gapName, F.gen()), F.gen());
+        }
+        return SUBRULE(translateAlgTerm, element);
+      }), F.gen());
     }
     throw new Error(`invalid term type: ${term.termType}`);
   },
@@ -82,6 +89,22 @@ export const translateAlgExtend: AstIndir<'translateExtend', Pattern | Pattern[]
       )),
     ].flat(), F.gen());
   },
+};
+
+/**
+ * rdf-array: an UNNEST follows the patterns of its input in the same group, as a BIND does
+ */
+export const translateAlgUnnest: AstIndir<'translateUnnest', Pattern[], [Algebra.Unnest]> = {
+  name: 'translateUnnest',
+  fun: ({ SUBRULE }) => ({ astFactory: F }, op) => [
+    SUBRULE(translateAlgPatternNew, op.input),
+    F.patternUnnest(
+      SUBRULE(translateAlgPureExpression, op.expression),
+      <RdfTermToAst<typeof op.variable>> SUBRULE(translateAlgTerm, op.variable),
+      op.position && <RdfTermToAst<typeof op.position>> SUBRULE(translateAlgTerm, op.position),
+      F.gen(),
+    ),
+  ].flat(),
 };
 
 export const translateAlgDatasetClauses:

@@ -78,6 +78,10 @@ export const builtInIsuri = funcExpr1(l.builtIn.isuri);
 export const builtInIsblank = funcExpr1(l.builtIn.isblank);
 export const builtInIsliteral = funcExpr1(l.builtIn.isliteral);
 export const builtInIsnumeric = funcExpr1(l.builtIn.isnumeric);
+// rdf-array: functions over sequences; `SEQ(...)` builds one, `SEQ()` the empty sequence
+export const builtInSeq = funcExprList1(l.builtIn.seq);
+export const builtInSeqlen = funcExpr1(l.builtIn.seqlen);
+export const builtInIsseq = funcExpr1(l.builtIn.isseq);
 
 export function builtInCallList(SUBRULE: ImplArgs['SUBRULE']): IOrAlt<Expression>[] {
   return [
@@ -133,6 +137,9 @@ export function builtInCallList(SUBRULE: ImplArgs['SUBRULE']): IOrAlt<Expression
     { ALT: () => SUBRULE(builtInIsblank) },
     { ALT: () => SUBRULE(builtInIsliteral) },
     { ALT: () => SUBRULE(builtInIsnumeric) },
+    { ALT: () => SUBRULE(builtInSeq) },
+    { ALT: () => SUBRULE(builtInSeqlen) },
+    { ALT: () => SUBRULE(builtInIsseq) },
     { ALT: () => SUBRULE(regexExpression) },
     { ALT: () => SUBRULE(existsFunc) },
     { ALT: () => SUBRULE(notExistsFunc) },

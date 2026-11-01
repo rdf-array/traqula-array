@@ -33,6 +33,7 @@ import {
   translateAlgWildcardExpression,
 
   translateAlgExtend,
+  translateAlgUnnest,
   translateAlgTerm,
 
   translateAlgNps,
@@ -108,6 +109,7 @@ export const toAst11Builder = IndirBuilder
     // General
     translateAlgTerm,
     translateAlgExtend,
+    translateAlgUnnest,
     translateAlgDatasetClauses,
     translateAlgOrderBy,
     translateAlgPattern,

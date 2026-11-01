@@ -1,5 +1,5 @@
 import type { Algebra } from '@traqula/algebra-transformations-1-1';
-import { AlgebraFactory, algebraUtils, createAstContext, createAlgebraContext }
+import { AlgebraFactory, algebraUtils, Canonicalizer, createAstContext, createAlgebraContext }
   from '@traqula/algebra-transformations-1-1';
 import { Generator } from '@traqula/generator-sparql-1-1';
 import { Parser } from '@traqula/parser-sparql-1-1';
@@ -140,6 +140,73 @@ GROUP BY ( ?y AS ?x )`);
       const algebra = toAlgebra(ast);
       const variables = algebraUtils.inScopeVariables(algebra);
       expect(variables.map(v => v.value)).toMatchObject([ 'o', 's' ]);
+    });
+  });
+
+  describe('rdf-array: gaps and UNNEST', () => {
+    it('inScopeVariables binds a named gap to its variable and an unnamed gap to nothing', ({ expect }) => {
+      const algebra = toAlgebra(parser.parse('SELECT * WHERE { ?s <http://p> ( ?h ...?t ... ) }'));
+      expect(algebraUtils.inScopeVariables(algebra).map(v => v.value).sort()).toEqual([ 'h', 's', 't' ]);
+    });
+
+    it('inScopeVariables binds the variables of an UNNEST, with and without a position', ({ expect }) => {
+      const withPosition = toAlgebra(parser.parse('SELECT * WHERE { ?s <http://p> ?o UNNEST(?o AS ?x AT ?i) }'));
+      expect(algebraUtils.inScopeVariables(withPosition).map(v => v.value).sort()).toEqual([ 'i', 'o', 's', 'x' ]);
+      const withoutPosition = toAlgebra(parser.parse('SELECT * WHERE { ?s <http://p> ?o UNNEST(?o AS ?x) }'));
+      expect(algebraUtils.inScopeVariables(withoutPosition).map(v => v.value).sort()).toEqual([ 'o', 's', 'x' ]);
+    });
+
+    it('spells gaps as `...` variables in the algebra and reads them back', ({ expect }) => {
+      const query = 'SELECT ?h ?t WHERE { ?s <http://p> ( ?h ...?t ... ) }';
+      const algebra = toAlgebra(parser.parse(query));
+      const pattern = (<Algebra.Bgp> (<Algebra.Project> algebra).input).patterns[0];
+      expect(algebraUtils.objectify(pattern.object)).toEqual({ termType: 'Sequence', elements: [
+        { termType: 'Variable', value: 'h' },
+        { termType: 'Variable', value: '...t' },
+        { termType: 'Variable', value: '...' },
+      ]});
+      expect(roundTrip(query)).toBe(`SELECT ?h ?t WHERE {
+  ?s <http://p> ( ?h ...?t ... ) .
+}`);
+    });
+
+    it('round trips UNNEST, index, slices, IN ?seq and the sequence functions', ({ expect }) => {
+      expect(roundTrip(`SELECT ?m ?i ?x ?y WHERE {
+  ?m <http://p> ?rows .
+  UNNEST(?rows AS ?row AT ?i)
+  UNNEST(?row AS ?x)
+  BIND(?row[2...] AS ?y)
+  FILTER(?x IN ?row[1] && SEQ(1) NOT IN ?rows && SEQLEN(?row[...2]) = 2 && isSEQ(?row))
+}`)).toBe(`SELECT ?m ?i ?x ?y WHERE {
+  {
+    ?m <http://p> ?rows .
+    UNNEST( ?rows AS ?row AT ?i )
+    UNNEST( ?row AS ?x )
+    BIND( ?row[ "2"^^<http://www.w3.org/2001/XMLSchema#integer>...] AS ?y )
+  }
+  FILTER ( ( ( ( ( ?x IN ?row[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>] ) && ( SEQ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> ) NOT IN ?rows ) ) && ( SEQLEN( ?row[ "1"^^<http://www.w3.org/2001/XMLSchema#integer>... "2"^^<http://www.w3.org/2001/XMLSchema#integer>] ) = "2"^^<http://www.w3.org/2001/XMLSchema#integer> ) ) && ISSEQ( ?row ) ) )
+}`);
+    });
+
+    it('the canonicalizer renames the variable of a named gap and keeps an unnamed gap', ({ expect }) => {
+      const canon = new Canonicalizer();
+      const DF = AF.dataFactory;
+      const sequence = DF.sequence!([
+        DF.variable!('h'),
+        DF.variable!('...t'),
+        DF.variable!('...'),
+        DF.variable!('t'),
+      ]);
+      expect(algebraUtils.objectify(canon.replaceValue(sequence, {}, true, AF)))
+        .toEqual({ termType: 'Sequence', elements: [
+          { termType: 'Variable', value: 'value_0' },
+          { termType: 'Variable', value: '...value_1' },
+          { termType: 'Variable', value: '...' },
+          { termType: 'Variable', value: 'value_1' },
+        ]});
+      // Without variable replacement, gaps are left alone like other variables
+      expect(algebraUtils.objectify(canon.replaceValue(sequence, {}, false, AF)))
+        .toEqual(algebraUtils.objectify(sequence));
     });
   });
 

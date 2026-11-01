@@ -1,0 +1,1081 @@
+{
+  "context": [
+    {
+      "type": "contextDef",
+      "subType": "prefix",
+      "key": "",
+      "value": {
+        "type": "term",
+        "subType": "namedNode",
+        "value": "http://ex/",
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 9,
+          "end": 21
+        }
+      },
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 0,
+        "end": 21
+      }
+    }
+  ],
+  "subType": "select",
+  "where": {
+    "type": "pattern",
+    "subType": "group",
+    "patterns": [
+      {
+        "type": "pattern",
+        "subType": "bgp",
+        "triples": [
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "variable",
+              "value": "obs",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 41,
+                "end": 45
+              }
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "component",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 46,
+                "end": 56
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 59,
+                      "end": 62
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "sequence",
+                    "elements": [
+                      {
+                        "type": "term",
+                        "subType": "literal",
+                        "value": "8480-6",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 65,
+                          "end": 73
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "name",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 74,
+                          "end": 79
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "sequence",
+                        "elements": [
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "v",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 82,
+                              "end": 84
+                            }
+                          },
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "unit",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 85,
+                              "end": 90
+                            }
+                          }
+                        ],
+                        "loc": {
+                          "sourceLocationType": "noMaterialize"
+                        }
+                      }
+                    ],
+                    "loc": {
+                      "sourceLocationType": "noMaterialize"
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 95,
+                      "end": 98
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 59,
+                    "end": 62
+                  }
+                },
+                {
+                  "type": "tripleCollection",
+                  "subType": "list",
+                  "identifier": {
+                    "type": "term",
+                    "subType": "sequence",
+                    "elements": [
+                      {
+                        "type": "term",
+                        "subType": "literal",
+                        "value": "8480-6",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 65,
+                          "end": 73
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "name",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 74,
+                          "end": 79
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "sequence",
+                        "elements": [
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "v",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 82,
+                              "end": 84
+                            }
+                          },
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "unit",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 85,
+                              "end": 90
+                            }
+                          }
+                        ],
+                        "loc": {
+                          "sourceLocationType": "noMaterialize"
+                        }
+                      }
+                    ],
+                    "loc": {
+                      "sourceLocationType": "noMaterialize"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "type": "term",
+                      "subType": "literal",
+                      "value": "8480-6",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 65,
+                        "end": 73
+                      }
+                    },
+                    {
+                      "type": "term",
+                      "subType": "variable",
+                      "value": "name",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 74,
+                        "end": 79
+                      }
+                    },
+                    {
+                      "type": "tripleCollection",
+                      "subType": "list",
+                      "identifier": {
+                        "type": "term",
+                        "subType": "sequence",
+                        "elements": [
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "v",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 82,
+                              "end": 84
+                            }
+                          },
+                          {
+                            "type": "term",
+                            "subType": "variable",
+                            "value": "unit",
+                            "loc": {
+                              "sourceLocationType": "source",
+                              "start": 85,
+                              "end": 90
+                            }
+                          }
+                        ],
+                        "loc": {
+                          "sourceLocationType": "noMaterialize"
+                        }
+                      },
+                      "elements": [
+                        {
+                          "type": "term",
+                          "subType": "variable",
+                          "value": "v",
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 82,
+                            "end": 84
+                          }
+                        },
+                        {
+                          "type": "term",
+                          "subType": "variable",
+                          "value": "unit",
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 85,
+                            "end": 90
+                          }
+                        }
+                      ],
+                      "triples": [],
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 80,
+                        "end": 92
+                      }
+                    }
+                  ],
+                  "triples": [],
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 63,
+                    "end": 94
+                  }
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 95,
+                    "end": 98
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 57,
+                "end": 100
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 41,
+              "end": 100
+            }
+          },
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "poly",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 105,
+                "end": 110
+              },
+              "prefix": ""
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "points",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 111,
+                "end": 118
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "term",
+                    "subType": "sequence",
+                    "elements": [
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "x0",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 123,
+                          "end": 126
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "y0",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 127,
+                          "end": 130
+                        }
+                      }
+                    ],
+                    "loc": {
+                      "sourceLocationType": "noMaterialize"
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 133,
+                      "end": 136
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "last",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 137,
+                      "end": 142
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "tripleCollection",
+                  "subType": "list",
+                  "identifier": {
+                    "type": "term",
+                    "subType": "sequence",
+                    "elements": [
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "x0",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 123,
+                          "end": 126
+                        }
+                      },
+                      {
+                        "type": "term",
+                        "subType": "variable",
+                        "value": "y0",
+                        "loc": {
+                          "sourceLocationType": "source",
+                          "start": 127,
+                          "end": 130
+                        }
+                      }
+                    ],
+                    "loc": {
+                      "sourceLocationType": "noMaterialize"
+                    }
+                  },
+                  "elements": [
+                    {
+                      "type": "term",
+                      "subType": "variable",
+                      "value": "x0",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 123,
+                        "end": 126
+                      }
+                    },
+                    {
+                      "type": "term",
+                      "subType": "variable",
+                      "value": "y0",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 127,
+                        "end": 130
+                      }
+                    }
+                  ],
+                  "triples": [],
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 121,
+                    "end": 132
+                  }
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 133,
+                    "end": 136
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "last",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 137,
+                    "end": 142
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 119,
+                "end": 144
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 105,
+              "end": 144
+            }
+          },
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "poly",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 149,
+                "end": 154
+              },
+              "prefix": ""
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "points",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 155,
+                "end": 162
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "h",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 165,
+                      "end": 167
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "variable": {
+                      "type": "term",
+                      "subType": "variable",
+                      "value": "t",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 172,
+                        "end": 173
+                      }
+                    },
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 168,
+                      "end": 173
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "h",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 165,
+                    "end": 167
+                  }
+                },
+                {
+                  "type": "gap",
+                  "variable": {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "t",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 172,
+                      "end": 173
+                    }
+                  },
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 168,
+                    "end": 173
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 163,
+                "end": 175
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 149,
+              "end": 175
+            }
+          },
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "poly",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 180,
+                "end": 185
+              },
+              "prefix": ""
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "points",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 186,
+                "end": 193
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "gap",
+                    "variable": {
+                      "type": "term",
+                      "subType": "variable",
+                      "value": "pre",
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 200,
+                        "end": 203
+                      }
+                    },
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 196,
+                      "end": 203
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "x",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 204,
+                      "end": 206
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 207,
+                      "end": 210
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "gap",
+                  "variable": {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "pre",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 200,
+                      "end": 203
+                    }
+                  },
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 196,
+                    "end": 203
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "x",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 204,
+                    "end": 206
+                  }
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 207,
+                    "end": 210
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 194,
+                "end": 212
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 180,
+              "end": 212
+            }
+          },
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "variable",
+              "value": "s",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 217,
+                "end": 219
+              }
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "p",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 220,
+                "end": 222
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "term",
+                    "subType": "literal",
+                    "value": "1",
+                    "langOrIri": {
+                      "type": "term",
+                      "subType": "namedNode",
+                      "value": "http://www.w3.org/2001/XMLSchema#integer",
+                      "loc": {
+                        "sourceLocationType": "noMaterialize"
+                      }
+                    },
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 225,
+                      "end": 226
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 226,
+                      "end": 229
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "namedNode",
+                    "value": "a",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 230,
+                      "end": 232
+                    },
+                    "prefix": ""
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 232,
+                      "end": 235
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "namedNode",
+                    "value": "a...b",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 236,
+                      "end": 242
+                    },
+                    "prefix": ""
+                  },
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "a",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 243,
+                      "end": 245
+                    }
+                  },
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 246,
+                      "end": 249
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "b",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 250,
+                      "end": 252
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "term",
+                  "subType": "literal",
+                  "value": "1",
+                  "langOrIri": {
+                    "type": "term",
+                    "subType": "namedNode",
+                    "value": "http://www.w3.org/2001/XMLSchema#integer",
+                    "loc": {
+                      "sourceLocationType": "noMaterialize"
+                    }
+                  },
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 225,
+                    "end": 226
+                  }
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 226,
+                    "end": 229
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "namedNode",
+                  "value": "a",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 230,
+                    "end": 232
+                  },
+                  "prefix": ""
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 232,
+                    "end": 235
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "namedNode",
+                  "value": "a...b",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 236,
+                    "end": 242
+                  },
+                  "prefix": ""
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "a",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 243,
+                    "end": 245
+                  }
+                },
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 246,
+                    "end": 249
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "b",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 250,
+                    "end": 252
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 223,
+                "end": 254
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 217,
+              "end": 254
+            }
+          },
+          {
+            "type": "triple",
+            "subject": {
+              "type": "tripleCollection",
+              "subType": "list",
+              "identifier": {
+                "type": "term",
+                "subType": "sequence",
+                "elements": [
+                  {
+                    "type": "gap",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 261,
+                      "end": 264
+                    }
+                  },
+                  {
+                    "type": "term",
+                    "subType": "variable",
+                    "value": "first",
+                    "loc": {
+                      "sourceLocationType": "source",
+                      "start": 265,
+                      "end": 271
+                    }
+                  }
+                ],
+                "loc": {
+                  "sourceLocationType": "noMaterialize"
+                }
+              },
+              "elements": [
+                {
+                  "type": "gap",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 261,
+                    "end": 264
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "first",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 265,
+                    "end": 271
+                  }
+                }
+              ],
+              "triples": [],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 259,
+                "end": 273
+              }
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "q",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 274,
+                "end": 276
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "term",
+              "subType": "variable",
+              "value": "z",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 277,
+                "end": 279
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 259,
+              "end": 279
+            }
+          }
+        ],
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 41,
+          "end": 281
+        }
+      }
+    ],
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 37,
+      "end": 283
+    }
+  },
+  "solutionModifiers": {},
+  "datasets": {
+    "type": "datasetClauses",
+    "clauses": [],
+    "loc": {
+      "sourceLocationType": "noMaterialize"
+    }
+  },
+  "variables": [
+    {
+      "type": "wildcard",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 29,
+        "end": 30
+      }
+    }
+  ],
+  "loc": {
+    "sourceLocationType": "inlinedSource",
+    "newSource": "PREFIX : <http://ex/>\nSELECT * WHERE {\n  ?obs :component ( ... ( \"8480-6\" ?name ( ?v ?unit ) ) ... ) .\n  :poly :points ( ( ?x0 ?y0 ) ... ?last ) .\n  :poly :points ( ?h ...?t ) .\n  :poly :points ( ...?pre ?x ... ) .\n  ?s :p ( 1... :a... :a...b ?a ... ?b ) .\n  ( ... ?first ) :q ?z .\n}\n",
+    "start": 0,
+    "end": 9007199254740991,
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 0,
+      "end": 283
+    },
+    "startOnNew": 0,
+    "endOnNew": 283
+  },
+  "type": "query"
+}

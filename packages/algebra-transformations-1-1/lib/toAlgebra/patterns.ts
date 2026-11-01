@@ -227,6 +227,16 @@ AlgebraIndir<'accumulateGroupGraphPattern', Algebra.Operation, [Algebra.Operatio
       );
     }
 
+    if (F.isPatternUnnest(pattern)) {
+      // rdf-array: UNNEST, like BIND, applies to the solutions accumulated so far
+      return AF.createUnnest(
+        algebraOp,
+        SUBRULE(translateExpression, pattern.expression),
+        <AstToRdfTerm<typeof pattern.variable>> SUBRULE(translateTerm, pattern.variable),
+        pattern.position && <AstToRdfTerm<typeof pattern.position>> SUBRULE(translateTerm, pattern.position),
+      );
+    }
+
     if (F.isPatternService(pattern)) {
       // Transform to group so child-nodes get parsed correctly
       const group = F.patternGroup(pattern.patterns, pattern.loc);

@@ -88,11 +88,17 @@ export class Canonicalizer {
       dataFactory.variable.bind(dataFactory) :
       dataFactory.blankNode.bind(dataFactory);
 
-    let val = nameMapping[term.value];
+    // rdf-array: a gap variable keeps its `...` prefix, and an unnamed gap its name
+    const gapName = util.gapVariableName(term);
+    if (gapName === '') {
+      return term;
+    }
+    const name = gapName ?? term.value;
+    let val = nameMapping[name];
     if (!val) {
       val = this.genValue();
-      nameMapping[term.value] = val;
+      nameMapping[name] = val;
     }
-    return generateTerm(val);
+    return generateTerm(gapName === undefined ? val : `${util.GAP_VARIABLE_PREFIX}${val}`);
   }
 }

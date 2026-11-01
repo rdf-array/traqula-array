@@ -1,0 +1,200 @@
+{
+  "type": "project",
+  "input": {
+    "type": "bgp",
+    "patterns": [
+      {
+        "type": "pattern",
+        "termType": "Quad",
+        "subject": {
+          "termType": "Variable",
+          "value": "obs"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://example.org/component"
+        },
+        "object": {
+          "termType": "Sequence",
+          "elements": [
+            {
+              "termType": "Variable",
+              "value": "..."
+            },
+            {
+              "termType": "Sequence",
+              "elements": [
+                {
+                  "termType": "Literal",
+                  "value": "8480-6",
+                  "datatype": {
+                    "termType": "NamedNode",
+                    "value": "http://www.w3.org/2001/XMLSchema#string"
+                  }
+                },
+                {
+                  "termType": "Variable",
+                  "value": "name"
+                },
+                {
+                  "termType": "Sequence",
+                  "elements": [
+                    {
+                      "termType": "Variable",
+                      "value": "v"
+                    },
+                    {
+                      "termType": "Variable",
+                      "value": "unit"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "termType": "Variable",
+              "value": "..."
+            }
+          ]
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        }
+      },
+      {
+        "type": "pattern",
+        "termType": "Quad",
+        "subject": {
+          "termType": "NamedNode",
+          "value": "http://example.org/poly"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://example.org/points"
+        },
+        "object": {
+          "termType": "Sequence",
+          "elements": [
+            {
+              "termType": "Variable",
+              "value": "h"
+            },
+            {
+              "termType": "Variable",
+              "value": "...t"
+            }
+          ]
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        }
+      },
+      {
+        "type": "pattern",
+        "termType": "Quad",
+        "subject": {
+          "termType": "NamedNode",
+          "value": "http://example.org/poly"
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://example.org/points"
+        },
+        "object": {
+          "termType": "Sequence",
+          "elements": [
+            {
+              "termType": "Variable",
+              "value": "...pre"
+            },
+            {
+              "termType": "Variable",
+              "value": "x"
+            },
+            {
+              "termType": "Variable",
+              "value": "..."
+            }
+          ]
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        }
+      },
+      {
+        "type": "pattern",
+        "termType": "Quad",
+        "subject": {
+          "termType": "Sequence",
+          "elements": [
+            {
+              "termType": "Variable",
+              "value": "..."
+            },
+            {
+              "termType": "Variable",
+              "value": "first"
+            }
+          ]
+        },
+        "predicate": {
+          "termType": "NamedNode",
+          "value": "http://example.org/q"
+        },
+        "object": {
+          "termType": "Variable",
+          "value": "z"
+        },
+        "graph": {
+          "termType": "DefaultGraph",
+          "value": ""
+        }
+      }
+    ]
+  },
+  "variables": [
+    {
+      "termType": "Variable",
+      "value": "first"
+    },
+    {
+      "termType": "Variable",
+      "value": "h"
+    },
+    {
+      "termType": "Variable",
+      "value": "name"
+    },
+    {
+      "termType": "Variable",
+      "value": "obs"
+    },
+    {
+      "termType": "Variable",
+      "value": "pre"
+    },
+    {
+      "termType": "Variable",
+      "value": "t"
+    },
+    {
+      "termType": "Variable",
+      "value": "unit"
+    },
+    {
+      "termType": "Variable",
+      "value": "v"
+    },
+    {
+      "termType": "Variable",
+      "value": "x"
+    },
+    {
+      "termType": "Variable",
+      "value": "z"
+    }
+  ]
+}

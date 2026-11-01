@@ -1,0 +1,550 @@
+{
+  "context": [
+    {
+      "type": "contextDef",
+      "subType": "prefix",
+      "key": "",
+      "value": {
+        "type": "term",
+        "subType": "namedNode",
+        "value": "http://ex/",
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 9,
+          "end": 21
+        }
+      },
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 0,
+        "end": 21
+      }
+    }
+  ],
+  "subType": "select",
+  "where": {
+    "type": "pattern",
+    "subType": "group",
+    "patterns": [
+      {
+        "type": "pattern",
+        "subType": "bgp",
+        "triples": [
+          {
+            "type": "triple",
+            "subject": {
+              "type": "term",
+              "subType": "variable",
+              "value": "s",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 42,
+                "end": 44
+              }
+            },
+            "predicate": {
+              "type": "term",
+              "subType": "namedNode",
+              "value": "points",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 45,
+                "end": 52
+              },
+              "prefix": ""
+            },
+            "object": {
+              "type": "term",
+              "subType": "variable",
+              "value": "pts",
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 53,
+                "end": 57
+              }
+            },
+            "loc": {
+              "sourceLocationType": "source",
+              "start": 42,
+              "end": 57
+            }
+          }
+        ],
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 42,
+          "end": 59
+        }
+      },
+      {
+        "type": "pattern",
+        "subType": "filter",
+        "expression": {
+          "type": "expression",
+          "subType": "operation",
+          "operator": "&&",
+          "args": [
+            {
+              "type": "expression",
+              "subType": "operation",
+              "operator": "&&",
+              "args": [
+                {
+                  "type": "expression",
+                  "subType": "operation",
+                  "operator": "&&",
+                  "args": [
+                    {
+                      "type": "expression",
+                      "subType": "operation",
+                      "operator": "&&",
+                      "args": [
+                        {
+                          "type": "expression",
+                          "subType": "operation",
+                          "operator": "inseq",
+                          "args": [
+                            {
+                              "type": "expression",
+                              "subType": "operation",
+                              "operator": "seq",
+                              "args": [
+                                {
+                                  "type": "term",
+                                  "subType": "literal",
+                                  "value": "3",
+                                  "langOrIri": {
+                                    "type": "term",
+                                    "subType": "namedNode",
+                                    "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                    "loc": {
+                                      "sourceLocationType": "noMaterialize"
+                                    }
+                                  },
+                                  "loc": {
+                                    "sourceLocationType": "source",
+                                    "start": 73,
+                                    "end": 74
+                                  }
+                                },
+                                {
+                                  "type": "term",
+                                  "subType": "literal",
+                                  "value": "4",
+                                  "langOrIri": {
+                                    "type": "term",
+                                    "subType": "namedNode",
+                                    "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                    "loc": {
+                                      "sourceLocationType": "noMaterialize"
+                                    }
+                                  },
+                                  "loc": {
+                                    "sourceLocationType": "source",
+                                    "start": 76,
+                                    "end": 77
+                                  }
+                                }
+                              ],
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 69,
+                                "end": 78
+                              }
+                            },
+                            {
+                              "type": "term",
+                              "subType": "variable",
+                              "value": "pts",
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 82,
+                                "end": 86
+                              }
+                            }
+                          ],
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 69,
+                            "end": 86
+                          }
+                        },
+                        {
+                          "type": "expression",
+                          "subType": "operation",
+                          "operator": "notinseq",
+                          "args": [
+                            {
+                              "type": "term",
+                              "subType": "variable",
+                              "value": "s",
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 90,
+                                "end": 92
+                              }
+                            },
+                            {
+                              "type": "expression",
+                              "subType": "operation",
+                              "operator": "index",
+                              "args": [
+                                {
+                                  "type": "term",
+                                  "subType": "variable",
+                                  "value": "pts",
+                                  "loc": {
+                                    "sourceLocationType": "source",
+                                    "start": 100,
+                                    "end": 104
+                                  }
+                                },
+                                {
+                                  "type": "term",
+                                  "subType": "literal",
+                                  "value": "1",
+                                  "langOrIri": {
+                                    "type": "term",
+                                    "subType": "namedNode",
+                                    "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                    "loc": {
+                                      "sourceLocationType": "noMaterialize"
+                                    }
+                                  },
+                                  "loc": {
+                                    "sourceLocationType": "source",
+                                    "start": 105,
+                                    "end": 106
+                                  }
+                                }
+                              ],
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 100,
+                                "end": 107
+                              }
+                            }
+                          ],
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 90,
+                            "end": 107
+                          }
+                        }
+                      ],
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 69,
+                        "end": 107
+                      }
+                    },
+                    {
+                      "type": "expression",
+                      "subType": "operation",
+                      "operator": "inseq",
+                      "args": [
+                        {
+                          "type": "term",
+                          "subType": "literal",
+                          "value": "1",
+                          "langOrIri": {
+                            "type": "term",
+                            "subType": "namedNode",
+                            "value": "http://www.w3.org/2001/XMLSchema#integer",
+                            "loc": {
+                              "sourceLocationType": "noMaterialize"
+                            }
+                          },
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 111,
+                            "end": 112
+                          }
+                        },
+                        {
+                          "type": "expression",
+                          "subType": "operation",
+                          "operator": "seq",
+                          "args": [
+                            {
+                              "type": "term",
+                              "subType": "literal",
+                              "value": "1",
+                              "langOrIri": {
+                                "type": "term",
+                                "subType": "namedNode",
+                                "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                "loc": {
+                                  "sourceLocationType": "noMaterialize"
+                                }
+                              },
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 120,
+                                "end": 121
+                              }
+                            },
+                            {
+                              "type": "term",
+                              "subType": "literal",
+                              "value": "2",
+                              "langOrIri": {
+                                "type": "term",
+                                "subType": "namedNode",
+                                "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                "loc": {
+                                  "sourceLocationType": "noMaterialize"
+                                }
+                              },
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 123,
+                                "end": 124
+                              }
+                            }
+                          ],
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 116,
+                            "end": 125
+                          }
+                        }
+                      ],
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 111,
+                        "end": 125
+                      }
+                    }
+                  ],
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 69,
+                    "end": 125
+                  }
+                },
+                {
+                  "type": "expression",
+                  "subType": "operation",
+                  "operator": "notinseq",
+                  "args": [
+                    {
+                      "type": "term",
+                      "subType": "literal",
+                      "value": "2",
+                      "langOrIri": {
+                        "type": "term",
+                        "subType": "namedNode",
+                        "value": "http://www.w3.org/2001/XMLSchema#integer",
+                        "loc": {
+                          "sourceLocationType": "noMaterialize"
+                        }
+                      },
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 129,
+                        "end": 130
+                      }
+                    },
+                    {
+                      "type": "expression",
+                      "subType": "operation",
+                      "operator": "index",
+                      "args": [
+                        {
+                          "type": "expression",
+                          "subType": "operation",
+                          "operator": "seq",
+                          "args": [
+                            {
+                              "type": "expression",
+                              "subType": "operation",
+                              "operator": "seq",
+                              "args": [
+                                {
+                                  "type": "term",
+                                  "subType": "literal",
+                                  "value": "1",
+                                  "langOrIri": {
+                                    "type": "term",
+                                    "subType": "namedNode",
+                                    "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                    "loc": {
+                                      "sourceLocationType": "noMaterialize"
+                                    }
+                                  },
+                                  "loc": {
+                                    "sourceLocationType": "source",
+                                    "start": 146,
+                                    "end": 147
+                                  }
+                                }
+                              ],
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 142,
+                                "end": 148
+                              }
+                            },
+                            {
+                              "type": "term",
+                              "subType": "literal",
+                              "value": "2",
+                              "langOrIri": {
+                                "type": "term",
+                                "subType": "namedNode",
+                                "value": "http://www.w3.org/2001/XMLSchema#integer",
+                                "loc": {
+                                  "sourceLocationType": "noMaterialize"
+                                }
+                              },
+                              "loc": {
+                                "sourceLocationType": "source",
+                                "start": 150,
+                                "end": 151
+                              }
+                            }
+                          ],
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 138,
+                            "end": 152
+                          }
+                        },
+                        {
+                          "type": "term",
+                          "subType": "literal",
+                          "value": "1",
+                          "langOrIri": {
+                            "type": "term",
+                            "subType": "namedNode",
+                            "value": "http://www.w3.org/2001/XMLSchema#integer",
+                            "loc": {
+                              "sourceLocationType": "noMaterialize"
+                            }
+                          },
+                          "loc": {
+                            "sourceLocationType": "source",
+                            "start": 153,
+                            "end": 154
+                          }
+                        }
+                      ],
+                      "loc": {
+                        "sourceLocationType": "source",
+                        "start": 138,
+                        "end": 155
+                      }
+                    }
+                  ],
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 129,
+                    "end": 155
+                  }
+                }
+              ],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 69,
+                "end": 155
+              }
+            },
+            {
+              "type": "expression",
+              "subType": "operation",
+              "operator": "in",
+              "args": [
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "s",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 159,
+                    "end": 161
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "variable",
+                  "value": "pts",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 166,
+                    "end": 170
+                  }
+                },
+                {
+                  "type": "term",
+                  "subType": "namedNode",
+                  "value": "a",
+                  "loc": {
+                    "sourceLocationType": "source",
+                    "start": 172,
+                    "end": 174
+                  },
+                  "prefix": ""
+                }
+              ],
+              "loc": {
+                "sourceLocationType": "source",
+                "start": 159,
+                "end": 175
+              }
+            }
+          ],
+          "loc": {
+            "sourceLocationType": "source",
+            "start": 68,
+            "end": 176
+          }
+        },
+        "loc": {
+          "sourceLocationType": "source",
+          "start": 62,
+          "end": 176
+        }
+      }
+    ],
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 38,
+      "end": 178
+    }
+  },
+  "solutionModifiers": {},
+  "datasets": {
+    "type": "datasetClauses",
+    "clauses": [],
+    "loc": {
+      "sourceLocationType": "noMaterialize"
+    }
+  },
+  "variables": [
+    {
+      "type": "term",
+      "subType": "variable",
+      "value": "s",
+      "loc": {
+        "sourceLocationType": "source",
+        "start": 29,
+        "end": 31
+      }
+    }
+  ],
+  "loc": {
+    "sourceLocationType": "inlinedSource",
+    "newSource": "PREFIX : <http://ex/>\nSELECT ?s WHERE {\n  ?s :points ?pts .\n  FILTER(SEQ(3, 4) IN ?pts && ?s NOT IN ?pts[1] && 1 IN SEQ(1, 2) && 2 NOT IN SEQ(SEQ(1), 2)[1] && ?s IN (?pts, :a))\n}\n",
+    "start": 0,
+    "end": 9007199254740991,
+    "loc": {
+      "sourceLocationType": "source",
+      "start": 0,
+      "end": 178
+    },
+    "startOnNew": 0,
+    "endOnNew": 178
+  },
+  "type": "query"
+}

@@ -1,0 +1,9 @@
+PREFIX : <http://ex/>
+SELECT * WHERE {
+  ?obs :component ( ... ( "8480-6" ?name ( ?v ?unit ) ) ... ) .
+  :poly :points ( ( ?x0 ?y0 ) ... ?last ) .
+  :poly :points ( ?h ...?t ) .
+  :poly :points ( ...?pre ?x ... ) .
+  ?s :p ( "1"^^<http://www.w3.org/2001/XMLSchema#integer> ... :a ... :a...b ?a ... ?b ) .
+  ( ... ?first ) :q ?z .
+}

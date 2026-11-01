@@ -203,6 +203,22 @@ export class AlgebraFactory {
     return this.flattenMulti({ type: A.Types.UNION, input: known(input) }, flatten);
   }
 
+  /**
+   * rdf-array: `UNNEST(expression AS variable AT position)`, the position being optional.
+   */
+  public createUnnest(
+    input: A.BaseOperation,
+    expression: A.BaseExpression,
+    variable: RDF.Variable,
+    position?: RDF.Variable,
+  ): A.Unnest {
+    const result: A.Unnest = { type: A.Types.UNNEST, input: known(input), expression: known(expression), variable };
+    if (position) {
+      result.position = position;
+    }
+    return result;
+  }
+
   public createValues(variables: RDF.Variable[], bindings: Record<string, RDF.Literal | RDF.NamedNode>[]): A.Values {
     return { type: A.Types.VALUES, variables, bindings };
   }

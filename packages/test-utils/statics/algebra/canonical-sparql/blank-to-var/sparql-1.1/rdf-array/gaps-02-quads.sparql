@@ -1,0 +1,5 @@
+SELECT ?child ?grandchild WHERE {
+  GRAPH ?g {
+    <http://example.org/tree> <http://example.org/node> ( "root"^^<http://www.w3.org/2001/XMLSchema#string> ( ... ( ?child ( ... ( ?grandchild ?kids ) ... ) ) ... ) ) .
+  }
+}

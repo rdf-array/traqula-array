@@ -327,6 +327,20 @@ describe('astFactory', () => {
       expect(list.triples).toEqual([ triple ]);
     });
 
+    it('creates and identifies gaps, and keeps them in a list collection (rdf-array)', ({ expect }) => {
+      const unnamed = F.gap(undefined, genLoc);
+      const named = F.gap(F.termVariable('rest', genLoc), genLoc);
+      expect(F.isGap(unnamed)).toBe(true);
+      expect(F.isGap(named)).toBe(true);
+      expect(F.isTerm(named)).toBe(false);
+      expect(unnamed.variable).toBeUndefined();
+      expect(named.variable?.value).toBe('rest');
+      const head = F.termVariable('h', genLoc);
+      const list = F.tripleCollectionList([ head, named, unnamed ], genLoc);
+      expect(list.identifier.elements).toEqual([ head, named, unnamed ]);
+      expect(list.triples).toEqual([]);
+    });
+
     it('creates and identifies sequence terms', ({ expect }) => {
       const sequence = F.termSequence([ F.termNamed(genLoc, 'http://a'), F.termVariable('v', genLoc) ], genLoc);
       expect(F.isTerm(sequence)).toBe(true);
@@ -334,6 +348,21 @@ describe('astFactory', () => {
       expect(F.isTermBlank(sequence)).toBe(false);
       expect(sequence.elements).toHaveLength(2);
       expect(F.isTermSequence(F.termSequence([], genLoc))).toBe(true);
+    });
+  });
+
+  describe('patternFactory (rdf-array)', () => {
+    it('creates and identifies UNNEST patterns, with and without a position', ({ expect }) => {
+      const expression = F.termVariable('rows', genLoc);
+      const variable = F.termVariable('row', genLoc);
+      const position = F.termVariable('i', genLoc);
+      const withPosition = F.patternUnnest(expression, variable, position, genLoc);
+      expect(F.isPatternUnnest(withPosition)).toBe(true);
+      expect(F.isPatternBind(withPosition)).toBe(false);
+      expect(withPosition.position).toBe(position);
+      const withoutPosition = F.patternUnnest(expression, variable, undefined, genLoc);
+      expect(F.isPatternUnnest(withoutPosition)).toBe(true);
+      expect('position' in withoutPosition).toBe(false);
     });
   });
 

@@ -1,0 +1,2 @@
+PREFIX : <http://ex/>
+INSERT DATA { :s :p ( 1 ... ) }

@@ -826,7 +826,8 @@ export const iriFull: SparqlGrammarRule<'iriFull', T11.TermIriFull> = {
 export const unaryExpression: SparqlGrammarRule<(typeof S11.unaryExpression)['name'], Expression> = {
   name: 'unaryExpression',
   impl: ({ ACTION, CONSUME, SUBRULE1, SUBRULE2, OR1, OR2 }) => C => OR1<Expression>([
-    { ALT: () => SUBRULE1(primaryExpression) },
+    // rdf-array: the operand may be indexed or sliced, `?x[1]`
+    { ALT: () => SUBRULE1(S11.postfixExpression) },
     { ALT: () => {
       const operator = CONSUME(l11.symbols.exclamation);
       const expr = SUBRULE1(unaryExpression);
@@ -841,10 +842,10 @@ export const unaryExpression: SparqlGrammarRule<(typeof S11.unaryExpression)['na
         { ALT: () => CONSUME(l11.symbols.opPlus) },
         { ALT: () => CONSUME(l11.symbols.opMinus) },
       ]);
-      const expr = SUBRULE2(primaryExpression);
+      const expr = SUBRULE2(S11.postfixExpression);
       return ACTION(() => C.astFactory.expressionOperation(
         operator.image === '+' ? 'UPLUS' : 'UMINUS',
-        [ <T11.Expression> expr ],
+        [ expr ],
         C.astFactory.sourceLocation(operator, expr),
       ));
     } },

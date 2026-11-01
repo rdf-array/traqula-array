@@ -25,6 +25,7 @@ import {
   translateAlgPattern,
   translateAlgReduced,
   translateAlgTerm,
+  translateAlgUnnest,
 } from './general.js';
 import { translateAlgPathComponent } from './path.js';
 import { translateAlgConstruct, translateAlgProject } from './queryUnit.js';
@@ -77,6 +78,7 @@ export const translateAlgPatternNew: AstIndir<'translatePatternNew', Pattern | P
       case types.JOIN: return SUBRULE(translateAlgJoin, op);
       case types.LEFT_JOIN: return SUBRULE(translateAlgLeftJoin, op);
       case types.MINUS: return SUBRULE(translateAlgMinus, op);
+      case types.UNNEST: return SUBRULE(translateAlgUnnest, op);
       default:
         return SUBRULE(translateAlgSinglePattern, op);
     }

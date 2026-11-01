@@ -1,0 +1,6 @@
+SELECT ?first ?h ?name ?obs ?pre ?t ?unit ?v ?x ?z WHERE {
+  ?obs <http://example.org/component> ( ... ( "8480-6"^^<http://www.w3.org/2001/XMLSchema#string> ?name ( ?v ?unit ) ) ... ) .
+  <http://example.org/poly> <http://example.org/points> ( ?h ...?t ) .
+  <http://example.org/poly> <http://example.org/points> ( ...?pre ?x ... ) .
+  ( ... ?first ) <http://example.org/q> ?z .
+}

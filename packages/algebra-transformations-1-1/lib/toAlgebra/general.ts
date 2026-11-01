@@ -67,8 +67,11 @@ export const translateTerm: AlgebraIndir<'translateTerm', RDF.Term, [Term]> = {
       return dataFactory.literal(term.value, langOrIri);
     }
     if (F.isTermSequence(term)) {
-      // rdf-array: a sequence term; the data factory is the fork with sequence()
-      return dataFactory.sequence!(term.elements.map(element => SUBRULE(translateTerm, element)));
+      // rdf-array: a sequence term; the data factory is the fork with sequence(). A gap becomes the variable
+      // `...` (unnamed) or `...name` (named gap `...?name`), see {@link util.isGapVariable}.
+      return dataFactory.sequence!(term.elements.map(element => F.isGap(element) ?
+        dataFactory.variable(`${util.GAP_VARIABLE_PREFIX}${element.variable?.value ?? ''}`) :
+        SUBRULE(translateTerm, element)));
     }
     throw new Error(`Unexpected term: ${JSON.stringify(term)}`);
   },

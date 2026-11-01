@@ -9,6 +9,8 @@ const rules = <const> [
   gram.whereClause,
   gram.solutionModifier,
   gram.valuesClause,
+  // rdf-array
+  gram.unnest,
 ];
 
 export const subSelectParserBuilder = ParserBuilder.create(rules)

@@ -1,0 +1,9 @@
+SELECT ?cols ?i ?m ?row ?rows ?x WHERE {
+  {
+    ?m <http://example.org/matrix> ?rows .
+    UNNEST( ?rows AS ?row AT ?i )
+    UNNEST( ?row AS ?x )
+    BIND( ?row[ "2"^^<http://www.w3.org/2001/XMLSchema#integer>... "3"^^<http://www.w3.org/2001/XMLSchema#integer>] AS ?cols )
+  }
+  FILTER ( ( ?x >= "90"^^<http://www.w3.org/2001/XMLSchema#integer> ) )
+}
