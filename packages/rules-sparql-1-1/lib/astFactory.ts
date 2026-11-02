@@ -13,6 +13,7 @@ import { UpdateOperationFactoryMixin } from './factoryMixins/UpdateOperationFact
 import type {
   DatasetClauses,
   Gap,
+  Slot,
   GraphNode,
   GraphQuads,
   PatternBgp,
@@ -134,10 +135,21 @@ export class AstFactory extends asArg(AstCoreFactory)
   }
 
   /**
+   * Rdf-undef: the empty slot of a sequence, `undef`.
+   */
+  public slot(loc: SourceLocation): Slot {
+    return { type: 'slot', loc };
+  }
+
+  public isSlot(obj: object): obj is Typed<'slot'> {
+    return this.isOfType(obj, 'slot');
+  }
+
+  /**
    * rdf-array: a collection `( e1 e2 ... )` is one sequence term. An element that is a blank node property
    * list (or a nested list) contributes its triples, and the sequence holds its identifier. A gap stays a gap.
    */
-  public tripleCollectionList(elements: (GraphNode | Gap)[], loc: SourceLocation): TripleCollectionList {
+  public tripleCollectionList(elements: (GraphNode | Gap | Slot)[], loc: SourceLocation): TripleCollectionList {
     const triples: TripleNesting[] = [];
     const identifiers: SequenceMember[] = elements.map((element) => {
       if (this.isTripleCollection(element)) {

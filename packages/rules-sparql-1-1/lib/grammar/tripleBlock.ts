@@ -5,6 +5,7 @@ import type { SparqlGrammarRule, SparqlRule } from '../sparql11HelperTypes.js';
 import type {
   BasicGraphPattern,
   Gap,
+  Slot,
   GraphNode,
   Path,
   PatternBgp,
@@ -280,10 +281,10 @@ export const objectPath = objectImpl('objectPath', true);
 function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlRule<T, TripleCollectionList> {
   return {
     name,
-    impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME, OR }) => (C) => {
+    impl: ({ ACTION, AT_LEAST_ONE, SUBRULE, CONSUME, CONSUME1, OR, OR1 }) => (C) => {
       // rdf-array: an [RDF collection](https://www.w3.org/TR/sparql11-query/#collections) is one sequence
       // term holding its elements, not a cons list of rdf:first/rdf:rest triples.
-      const terms: (GraphNode | Gap)[] = [];
+      const terms: (GraphNode | Gap | Slot)[] = [];
 
       const startToken = CONSUME(l.symbols.LParen);
 
@@ -291,8 +292,12 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
         if (allowPaths) {
           // rdf-array: in a pattern (WHERE), a member may also be a gap `...` or a named gap `...?rest`;
           // a template or data (`collection`, without paths) builds a sequence and has no gaps.
-          terms.push(OR<GraphNode | Gap>([
+          terms.push(OR<GraphNode | Gap | Slot>([
             { ALT: () => SUBRULE(graphNodePath) },
+            { ALT: () => {
+              const token = CONSUME(l.undef);
+              return ACTION(() => C.astFactory.slot(C.astFactory.sourceLocation(token)));
+            } },
             { ALT: () => {
               const token = CONSUME(l.symbols.ellipsis);
               return ACTION(() => C.astFactory.gap(undefined, C.astFactory.sourceLocation(token)));
@@ -310,7 +315,14 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
             } },
           ]));
         } else {
-          terms.push(SUBRULE(graphNode));
+          // Rdf-undef: a template or data holds no gap, and may hold an empty slot
+          terms.push(OR1<GraphNode | Slot>([
+            { ALT: () => SUBRULE(graphNode) },
+            { ALT: () => {
+              const token = CONSUME1(l.undef);
+              return ACTION(() => C.astFactory.slot(C.astFactory.sourceLocation(token)));
+            } },
+          ]));
         }
       });
       const endToken = CONSUME(l.symbols.RParen);
@@ -325,6 +337,8 @@ function collectionImpl<T extends string>(name: T, allowPaths: boolean): SparqlR
         F.printFilter(ast, () => PRINT_WORD(''));
         if (F.isGap(element)) {
           SUBRULE(gap, element);
+        } else if (F.isSlot(element)) {
+          F.printFilter(element, () => PRINT_WORD('undef'));
         } else {
           SUBRULE(graphNodePath, element);
         }

@@ -15,6 +15,8 @@ import {
   funcGroupGraphPattern,
   funcNil1,
   funcVar1,
+  type ExpressionFunctionX,
+  type RuleDefExpressionFunctionX,
 } from '../expressionHelpers.js';
 import * as l from '../lexer/index.js';
 import type { SparqlGrammarRule, SparqlRule } from '../sparql11HelperTypes.js';
@@ -79,7 +81,43 @@ export const builtInIsblank = funcExpr1(l.builtIn.isblank);
 export const builtInIsliteral = funcExpr1(l.builtIn.isliteral);
 export const builtInIsnumeric = funcExpr1(l.builtIn.isnumeric);
 // rdf-array: functions over sequences; `SEQ(...)` builds one, `SEQ()` the empty sequence
-export const builtInSeq = funcExprList1(l.builtIn.seq);
+// rdf-undef: an argument may be the empty slot, `SEQ(1, undef, 3)`
+export const builtInSeq: RuleDefExpressionFunctionX<'seq', Expression[]> = {
+  name: 'seq',
+  impl: ({ ACTION, CONSUME, CONSUME1, CONSUME2, MANY, OR, OR1, OR2, SUBRULE1, SUBRULE2 }) => (C) => {
+    const operator = CONSUME(l.builtIn.seq);
+    return OR<ExpressionFunctionX<Expression[]>>([
+      { ALT: () => {
+        const nil = CONSUME(l.terminals.nil);
+        return ACTION(() =>
+          C.astFactory.expressionOperation(operator.image, [], C.astFactory.sourceLocation(operator, nil)));
+      } },
+      { ALT: () => {
+        CONSUME(l.symbols.LParen);
+        const args: Expression[] = [ OR1<Expression>([
+          { ALT: () => SUBRULE1(expression) },
+          { ALT: () => {
+            const token = CONSUME1(l.undef);
+            return ACTION(() => <Expression> <unknown> C.astFactory.slot(C.astFactory.sourceLocation(token)));
+          } },
+        ]) ];
+        MANY(() => {
+          CONSUME(l.symbols.comma);
+          args.push(OR2<Expression>([
+            { ALT: () => SUBRULE2(expression) },
+            { ALT: () => {
+              const token = CONSUME2(l.undef);
+              return ACTION(() => <Expression> <unknown> C.astFactory.slot(C.astFactory.sourceLocation(token)));
+            } },
+          ]));
+        });
+        const close = CONSUME(l.symbols.RParen);
+        return ACTION(() =>
+          C.astFactory.expressionOperation(operator.image, args, C.astFactory.sourceLocation(operator, close)));
+      } },
+    ]);
+  },
+};
 export const builtInSeqlen = funcExpr1(l.builtIn.seqlen);
 export const builtInIsseq = funcExpr1(l.builtIn.isseq);
 

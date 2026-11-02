@@ -118,7 +118,10 @@ export const expression: SparqlRule<'expression', Expression> = <const> {
   name: 'expression',
   impl: ({ SUBRULE }) => () => SUBRULE(conditionalOrExpression),
   gImpl: ({ SUBRULE, PRINT, PRINT_WORD }) => (ast, { astFactory: F }) => {
-    if (F.isTerm(ast)) {
+    if (F.isSlot(ast)) {
+      // Rdf-undef: only as an argument of SEQ
+      F.printFilter(ast, () => PRINT_WORD('undef'));
+    } else if (F.isTerm(ast)) {
       SUBRULE(varOrTerm, ast);
     } else if (F.isExpressionPatternOperation(ast)) {
       const patterns = ast.args;

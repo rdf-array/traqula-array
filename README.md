@@ -27,6 +27,11 @@ The grammars also parse the SPARQL-array syntax of
 - `UNNEST(expr AS ?x AT ?i)` is the pattern `PatternUnnest` (`AT ?i` optional) and the algebra
   operation `unnest` (`{ type: 'unnest', input, expression, variable, position? }`), beside
   `extend`. Like a `BIND`, it may not rebind a variable in scope.
+- rdf-undef (branch `rdf-undef`, [rdf-undef.md](https://rdf-array.github.io/rdf-array/docs/rdf-undef.html)): `undef`, in any
+  case, is a member of a sequence in patterns, templates and data, and an argument of `SEQ`; anywhere else it stays a syntax
+  error, and `VALUES ?x { undef }` is unchanged. The AST has a `Slot` node (`{ type: 'slot' }`, `F.slot`, `F.isSlot`), the algebra
+  `dataFactory.undef()`, in a sequence's elements or as the term of a `SEQ` argument's term expression. Tests:
+  `engines/algebra-sparql-1-1/test/extraCoverage.test.ts`; `yarn test` 9079 passed (9071 before); `yarn spec:all` unchanged at 642/647; rdf-tests-contrib `syntax-query` (branch `rdf-undef`) 106/106 through rdf-test-suite-array.
 - Expressions: `expr[i]` is the operator `index`, `expr[m...n]` and `expr[m...]` the operator
   `slice` with three or two arguments (`expr[...n]` is read as `expr[1...n]`), `?x IN ?seq` and
   `?x NOT IN ?seq` are `inseq` and `notinseq` (the right-hand side a variable, a `SEQ(…)` call or an

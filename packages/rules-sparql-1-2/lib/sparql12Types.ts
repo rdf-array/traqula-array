@@ -16,7 +16,8 @@ export type Sparql12Nodes =
   | ContextDefinition
   | Wildcard
   | Term
-  | T11.Gap;
+  | T11.Gap
+  | T11.Slot;
 
 export type GraphRefBase = T11.GraphRefBase;
 export type GraphRefDefault = T11.GraphRefDefault;
@@ -156,7 +157,7 @@ export type TripleCollectionBase = Node & {
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
   identifier: T11.TermSequence;
-  elements: (GraphNode | T11.Gap)[];
+  elements: (GraphNode | T11.Gap | T11.Slot)[];
 };
 /**
  * The subject of the triples does not have a string manifestation.

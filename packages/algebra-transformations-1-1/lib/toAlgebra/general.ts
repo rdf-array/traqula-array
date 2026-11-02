@@ -69,9 +69,13 @@ export const translateTerm: AlgebraIndir<'translateTerm', RDF.Term, [Term]> = {
     if (F.isTermSequence(term)) {
       // rdf-array: a sequence term; the data factory is the fork with sequence(). A gap becomes the variable
       // `...` (unnamed) or `...name` (named gap `...?name`), see {@link util.isGapVariable}.
-      return dataFactory.sequence!(term.elements.map(element => F.isGap(element) ?
-        dataFactory.variable(`${util.GAP_VARIABLE_PREFIX}${element.variable?.value ?? ''}`) :
-        SUBRULE(translateTerm, element)));
+      return dataFactory.sequence!(term.elements.map((element) => {
+        if (F.isGap(element)) {
+          return dataFactory.variable(`${util.GAP_VARIABLE_PREFIX}${element.variable?.value ?? ''}`);
+        }
+        // Rdf-undef: the empty slot of a sequence
+        return F.isSlot(element) ? dataFactory.undef!() : SUBRULE(translateTerm, element);
+      }));
     }
     throw new Error(`Unexpected term: ${JSON.stringify(term)}`);
   },
@@ -156,7 +160,8 @@ AlgebraIndir<'translateBlankNodesToVariables', Algebra.Operation, [Algebra.Opera
       }
       if (term.termType === 'Sequence') {
         // rdf-array: blank nodes inside a sequence term become variables too
-        return AF.dataFactory.sequence!(term.elements.map(element => blankToVariable(element)));
+        return AF.dataFactory.sequence!(term.elements.map(element =>
+          element.termType === 'Undef' ? element : blankToVariable(element)));
       }
       return term;
     }

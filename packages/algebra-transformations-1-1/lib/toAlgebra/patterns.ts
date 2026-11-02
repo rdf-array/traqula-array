@@ -22,7 +22,11 @@ import { recurseGraph, translateBasicGraphPattern, translateQuad } from './tripl
  */
 export const translateExpression: AlgebraIndir<'translateExpression', Algebra.Expression, [Expression | Wildcard]> = {
   name: 'translateExpression',
-  fun: ({ SUBRULE }) => ({ astFactory: F, algebraFactory: AF }, expr) => {
+  fun: ({ SUBRULE }) => ({ astFactory: F, algebraFactory: AF, dataFactory }, expr) => {
+    if (F.isSlot(expr)) {
+      // Rdf-undef: only as an argument of SEQ
+      return AF.createTermExpression(<RDF.Term> <unknown> dataFactory.undef!());
+    }
     if (F.isTerm(expr)) {
       return AF.createTermExpression(SUBRULE(translateTerm, expr));
     }

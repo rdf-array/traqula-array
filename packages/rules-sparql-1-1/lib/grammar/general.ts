@@ -167,6 +167,8 @@ export const graphTerm: SparqlRule<'graphTerm', GraphTerm> = <const> {
         F.printFilter(ast, () => PRINT_WORD(''));
         if (F.isGap(element)) {
           SUBRULE(gap, element);
+        } else if (F.isSlot(element)) {
+          F.printFilter(element, () => PRINT_WORD('undef'));
         } else {
           SUBRULE(varOrTerm, element);
         }

@@ -16,7 +16,8 @@ export type Sparql11Nodes =
   | ContextDefinition
   | Wildcard
   | Term
-  | Gap;
+  | Gap
+  | Slot;
 
 export type GraphRefBase = Node & {
   type: 'graphRef';
@@ -169,12 +170,13 @@ export type TripleCollectionBase = Node & {
 /**
  * rdf-array: a collection `( e1 e2 ... )` is one sequence term: the identifier is the sequence of the
  * elements' identifiers, and the triples are those contributed by the blank node property lists
- * (and nested lists) among the elements. In a WHERE clause an element may be a {@link Gap}.
+ * (and nested lists) among the elements. In a WHERE clause an element may be a {@link Gap}, and anywhere a
+ * {@link Slot}.
  */
 export type TripleCollectionList = TripleCollectionBase & {
   subType: 'list';
   identifier: TermSequence;
-  elements: (GraphNode | Gap)[];
+  elements: (GraphNode | Gap | Slot)[];
 };
 /**
  * Bot subject and predicate of the triples do not have a string manifestation.
@@ -450,9 +452,13 @@ export type TermBlank = TermBase & { subType: 'blankNode' } & { label: string };
  */
 export type Gap = Node & { type: 'gap'; variable?: TermVariable };
 /**
- * rdf-array: a member of a sequence term: a term, or, in a pattern, a gap.
+ * Rdf-undef: the empty slot of a sequence, `undef`, a member of a sequence or an argument of `SEQ`, and not a term.
  */
-export type SequenceMember = Term | Gap;
+export type Slot = Node & { type: 'slot' };
+/**
+ * rdf-array: a member of a sequence term: a term, an empty slot, or, in a pattern, a gap.
+ */
+export type SequenceMember = Term | Gap | Slot;
 /**
  * rdf-array: a sequence term, `( e1 e2 ... )`, holding its elements in order; `()` is the empty sequence.
  */

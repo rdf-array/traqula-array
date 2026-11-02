@@ -75,7 +75,9 @@ export class Canonicalizer {
     if (term.termType === 'Sequence') {
       // rdf-array: blank nodes and variables inside a sequence are renamed like those inside a quoted triple
       return new DataFactory().sequence(
-        term.elements.map(element => this.replaceValue(element, nameMapping, replaceVars, factory)),
+        term.elements.map(element => element.termType === 'Undef' ?
+          element :
+          this.replaceValue(element, nameMapping, replaceVars, factory)),
       );
     }
 

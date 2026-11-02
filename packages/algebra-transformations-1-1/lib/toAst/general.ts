@@ -43,14 +43,18 @@ export const translateAlgTerm: AstIndir<'translateTerm', Term, [RDF.Term]> = {
         term.language ? term.language : <RdfTermToAst<typeof term.datatype>>SUBRULE(translateAlgTerm, term.datatype),
       );
     }
+    if (<string> term.termType === 'Undef') {
+      // Rdf-undef: a member of a sequence, or an argument of SEQ
+      return <Term> <unknown> F.slot(F.gen());
+    }
     if (term.termType === 'Sequence') {
       // rdf-array: a sequence term prints as `( e1 e2 ... )`; a gap variable (`...`, `...name`) becomes a gap again
       return F.termSequence(term.elements.map((element) => {
-        const gapName = gapVariableName(element);
+        const gapName = gapVariableName(<RDF.Term> element);
         if (gapName !== undefined) {
           return F.gap(gapName === '' ? undefined : F.termVariable(gapName, F.gen()), F.gen());
         }
-        return SUBRULE(translateAlgTerm, element);
+        return SUBRULE(translateAlgTerm, <RDF.Term> element);
       }), F.gen());
     }
     throw new Error(`invalid term type: ${term.termType}`);

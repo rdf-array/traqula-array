@@ -143,6 +143,77 @@ GROUP BY ( ?y AS ?x )`);
     });
   });
 
+  describe('rdf-undef: the empty slot', () => {
+    const prefix = 'PREFIX : <http://e/> ';
+
+    it('reads undef as a member of a pattern, a template and data, and keeps it in the algebra', ({ expect }) => {
+      const select: any = toAlgebra(parser.parse(`${prefix}SELECT * WHERE { ?s :p ( 1 undef ( UNDEF ?c ) ) }`));
+      const bgp = select.input;
+      expect(bgp.patterns[0].object.value).toMatch(/^\("1".* undef \(undef \?c\)\)$/u);
+      const data: any = toAlgebra(parser.parse(`${prefix}INSERT DATA { :s :p ( undef 1 ) }`), { quads: true });
+      expect(data.insert[0].object.elements[0].termType).toBe('Undef');
+    });
+
+    it('round trips a pattern, a template, SEQ and update', ({ expect }) => {
+      expect(roundTrip('SELECT * WHERE { ?s <http://p> ( 1 undef ?c ) }')).toContain('undef');
+      expect(roundTrip('CONSTRUCT { ?s <http://q> ( undef ?c ) } WHERE { ?s <http://p> ?c }')).toContain('undef');
+      expect(roundTrip('SELECT * WHERE { BIND(SEQ(undef, 1, undef) AS ?v) }'))
+        .toMatch(/SEQ\s*\(\s*undef\s*,\s*"1"\S*\s*,\s*undef\s*\)/u);
+      expect(roundTripQuads('INSERT DATA { <http://s> <http://p> ( undef 1 ) }')).toContain('undef');
+      const ast = parser.parse('SELECT * WHERE { ?s <http://p> ( 1 undef ?c ) BIND(SEQ(undef) AS ?v) }');
+      expect(generator.generate(F.forcedAutoGenTree(ast))).toContain('undef');
+      expect(parser.parse(generator.generate(F.forcedAutoGenTree(ast)))).toBeDefined();
+    });
+
+    it('takes undef in any case in SEQ, and undef:x as a prefixed name', ({ expect }) => {
+      expect(() => parser.parse('SELECT * WHERE { BIND(SEQ(UNDEF, Undef) AS ?v) }')).not.toThrow();
+      expect(() => parser.parse('PREFIX undef: <http://e/> SELECT * WHERE { undef:s undef:p ( undef:o undef undef: ) }'))
+        .not.toThrow();
+    });
+
+    it('refuses undef outside a sequence and SEQ', ({ expect }) => {
+      for (const query of [
+        'SELECT * WHERE { ?s :p undef }',
+        'SELECT * WHERE { undef :p ?o }',
+        'SELECT * WHERE { ?s undef ?o }',
+        'SELECT * WHERE { BIND(undef AS ?x) }',
+        'SELECT * WHERE { ?s :p ?o FILTER(?o = undef) }',
+        'SELECT * WHERE { BIND(STR(undef) AS ?x) }',
+        'CONSTRUCT { ?s :p undef } WHERE { ?s :p ?o }',
+        'SELECT * WHERE { ?s :p ( undefined ) }',
+      ]) {
+        expect(() => parser.parse(prefix + query), query).toThrow();
+      }
+    });
+
+    it('keeps VALUES ?x { undef }', ({ expect }) => {
+      const values: any = toAlgebra(parser.parse('SELECT * WHERE { VALUES ?x { undef } }'));
+      expect(values.input.bindings).toEqual([{}]);
+    });
+
+    it('inScopeVariables counts the variables beside a slot, and no slot', ({ expect }) => {
+      const select: any = toAlgebra(parser.parse(`${prefix}SELECT * WHERE { ?s :p ( undef ?c ) }`));
+      expect(algebraUtils.inScopeVariables(select.input).map(v => v.value).sort()).toEqual([ 'c', 's' ]);
+    });
+
+    it('the canonicalizer keeps a slot and renames the variable beside it', ({ expect }) => {
+      const DF = AF.dataFactory;
+      expect(algebraUtils.objectify(new Canonicalizer()
+        .replaceValue(DF.sequence!([ DF.undef!(), DF.variable!('c') ]), {}, true, AF)))
+        .toEqual({ termType: 'Sequence', elements: [
+          { termType: 'Undef', value: 'undef' },
+          { termType: 'Variable', value: 'value_0' },
+        ]});
+    });
+
+    it('a blank node beside a slot in a pattern becomes a variable', ({ expect }) => {
+      const select: any = toAlgebra(parser.parse(`${prefix}SELECT * WHERE { ?s :p ( undef [] ) }`), { blankToVariable: true });
+      const object = select.input.patterns[0].object;
+      expect(object.elements[0].termType).toBe('Undef');
+      expect(object.elements[1].termType).toBe('Variable');
+    });
+  });
+
   describe('rdf-array: gaps and UNNEST', () => {
     it('inScopeVariables binds a named gap to its variable and an unnamed gap to nothing', ({ expect }) => {
       const algebra = toAlgebra(parser.parse('SELECT * WHERE { ?s <http://p> ( ?h ...?t ... ) }'));

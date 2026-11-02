@@ -34,7 +34,8 @@ export function langTagHasCorrectRange(literal: TermLiteral): void {
 }
 
 export function findPatternBoundedVars(
-  iter: SparqlQuery | Pattern | TripleNesting | TripleCollection | Path | Term | Wildcard | T11.Gap | undefined,
+  iter: SparqlQuery | Pattern | TripleNesting | TripleCollection | Path | Term | Wildcard | T11.Gap | T11.Slot |
+    undefined,
   boundedVars: Set<string>,
 ): void {
   if (iter === undefined) {

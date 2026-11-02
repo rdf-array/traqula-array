@@ -15,7 +15,7 @@ export const GAP_VARIABLE_PREFIX = '...';
 /**
  * rdf-array: whether a term is the algebra's spelling of a gap in a sequence pattern.
  */
-export function isGapVariable(term: RDF.Term): term is RDF.Variable {
+export function isGapVariable(term: RDF.SequenceElement): term is RDF.Variable {
   return term.termType === 'Variable' && term.value.startsWith(GAP_VARIABLE_PREFIX);
 }
 
@@ -23,7 +23,7 @@ export function isGapVariable(term: RDF.Term): term is RDF.Variable {
  * rdf-array: the name of the variable a gap binds: `''` for an unnamed gap, `undefined` for a term that is
  * not a gap.
  */
-export function gapVariableName(term: RDF.Term): string | undefined {
+export function gapVariableName(term: RDF.SequenceElement): string | undefined {
   return isGapVariable(term) ? term.value.slice(GAP_VARIABLE_PREFIX.length) : undefined;
 }
 
@@ -546,7 +546,9 @@ export function inScopeVariables(
     } else if (term.termType === 'Sequence') {
       // rdf-array: variables inside a sequence term are in scope too
       for (const element of term.elements) {
-        visitTerm(element);
+        if (element.termType !== 'Undef') {
+          visitTerm(element);
+        }
       }
     }
   }
